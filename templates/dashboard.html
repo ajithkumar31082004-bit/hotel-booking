@@ -1,0 +1,1554 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guest Dashboard — Blissful Abodes Chennai</title>
+    <meta
+      name="description"
+      content="Manage your bookings, loyalty rewards and preferences at Blissful Abodes Chennai."
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #d4af37;
+        --gold-light: #f0d080;
+        --dark-bg: #0d1117;
+        --card-bg: #161b22;
+        --card-bg2: #1e2530;
+        --border: rgba(212, 175, 55, 0.2);
+        --text: #e6edf3;
+        --text-muted: rgba(230, 237, 243, 0.45);
+        --green: #22c55e;
+        --blue: #3b82f6;
+        --purple: #8b5cf6;
+        --red: #ef4444;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--dark-bg);
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+      }
+
+      /* NAV */
+      .topnav {
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-brand .brand-name {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .nav-brand .brand-sub {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        display: block;
+        margin-top: 1px;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .nav-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.86rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-link:hover {
+        color: var(--gold);
+      }
+      .nav-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-ava {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #92703c);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #0d1117;
+      }
+      .logout-btn {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        text-decoration: none;
+        margin-left: 6px;
+        transition: color 0.2s;
+      }
+      .logout-btn:hover {
+        color: #f87171;
+      }
+
+      .container-lux {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 28px 24px;
+      }
+
+      /* WELCOME BANNER */
+      .welcome-banner {
+        background: linear-gradient(
+          135deg,
+          #161b22 0%,
+          #1a2332 50%,
+          #1e2530 100%
+        );
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--gold);
+        border-radius: 16px;
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .welcome-banner::before {
+        content: "";
+        position: absolute;
+        right: -30px;
+        top: -30px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(212, 175, 55, 0.07) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+      .welcome-greeting {
+        font-size: 0.8rem;
+        color: var(--gold);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+      }
+      .welcome-name {
+        font-family: "Playfair Display", serif;
+        font-size: 1.9rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .welcome-sub {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+      }
+      .loyalty-badge {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        padding: 14px 20px;
+        background: rgba(212, 175, 55, 0.07);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      .tier-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+      }
+      .tier-icon {
+        font-size: 2rem;
+        display: block;
+        margin: 4px 0;
+      }
+      .tier-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .tier-pts {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      @media (max-width: 700px) {
+        .loyalty-badge {
+          display: none;
+        }
+      }
+
+      /* STAT CARDS */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .stat-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 18px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: default;
+      }
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+      }
+      .stat-card.c1::before {
+        background: linear-gradient(90deg, #d4af37, #f0d080);
+      }
+      .stat-card.c2::before {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      }
+      .stat-card.c3::before {
+        background: linear-gradient(90deg, #22c55e, #4ade80);
+      }
+      .stat-card.c4::before {
+        background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+      }
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+      .stat-icon {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+      }
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .stat-label {
+        font-size: 0.74rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .stat-sub {
+        font-size: 0.72rem;
+        margin-top: 4px;
+      }
+
+      /* QUICK ACTIONS */
+      .qa-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      @media (max-width: 768px) {
+        .qa-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .qa-item {
+        padding: 18px 14px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.25s;
+      }
+      .qa-item:hover {
+        border-color: var(--gold);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        color: var(--text);
+      }
+      .qa-icon {
+        font-size: 1.4rem;
+        display: block;
+        margin-bottom: 8px;
+      }
+      .qa-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+      .qa-sub {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      /* SECTIONS */
+      .section-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 22px;
+      }
+      .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-title i {
+        color: var(--gold);
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+      @media (max-width: 900px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* UPCOMING BOOKING CARD */
+      .ub-card {
+        background: var(--card-bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .ub-date {
+        text-align: center;
+        padding: 10px 16px;
+        background: rgba(212, 175, 55, 0.08);
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+      .ub-date .month {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+      }
+      .ub-date .day {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+      }
+      .ub-info .room-name {
+        font-size: 0.97rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .ub-info .room-meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .ub-amount .amt {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .ub-amount .nights {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+      .countdown {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .cd-item {
+        text-align: center;
+        padding: 7px 10px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 8px;
+        min-width: 48px;
+      }
+      .cd-num {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #60a5fa;
+        display: block;
+      }
+      .cd-lbl {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+      }
+
+      /* TABLES */
+      .lux-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .lux-table th {
+        padding: 9px 12px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+      }
+      .lux-table td {
+        padding: 12px 12px;
+        font-size: 0.84rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        vertical-align: middle;
+      }
+      .lux-table tr:hover td {
+        background: rgba(212, 175, 55, 0.025);
+      }
+
+      /* BADGES */
+      .badge-lux {
+        padding: 3px 9px;
+        border-radius: 5px;
+        font-size: 0.71rem;
+        font-weight: 600;
+      }
+      .badge-confirmed {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+      }
+      .badge-completed {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+      }
+      .badge-cancelled {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+      }
+      .badge-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+      }
+      .badge-gold {
+        background: rgba(212, 175, 55, 0.15);
+        color: var(--gold);
+      }
+
+      /* BUTTONS */
+      .btn-lux {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-gold {
+        background: var(--gold);
+        color: #0d1117;
+      }
+      .btn-gold:hover {
+        background: var(--gold-light);
+        color: #0d1117;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+      }
+      .btn-outline:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+
+      /* LOYALTY */
+      .tier-progress-wrap {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 10px;
+        height: 10px;
+        overflow: hidden;
+        margin: 12px 0 6px;
+      }
+      .tier-progress {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        border-radius: 10px;
+        transition: width 1.2s ease;
+      }
+      .tier-milestones {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+      }
+      @media (max-width: 600px) {
+        .tier-milestones {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .tier-item {
+        text-align: center;
+        padding: 12px 8px;
+        background: var(--card-bg2);
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+      .tier-item.current {
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.08);
+      }
+      .tier-icon2 {
+        font-size: 1.3rem;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .tier-name2 {
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .tier-pts2 {
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .tier-benefits {
+        margin-top: 16px;
+      }
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 0.84rem;
+      }
+      .benefit-item:last-child {
+        border-bottom: none;
+      }
+      .benefit-item i {
+        color: var(--gold);
+        width: 16px;
+      }
+
+      /* REVIEWS */
+      .review-card {
+        background: var(--card-bg2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 10px;
+      }
+      .review-stars {
+        color: var(--gold);
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+      }
+      .review-text {
+        font-size: 0.84rem;
+        color: var(--text);
+        margin-bottom: 4px;
+        font-style: italic;
+      }
+      .review-meta {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+      .review-response {
+        background: rgba(212, 175, 55, 0.05);
+        border-left: 3px solid var(--gold);
+        padding: 8px 12px;
+        border-radius: 0 6px 6px 0;
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      /* FAVORITES */
+      .fav-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      @media (max-width: 768px) {
+        .fav-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .fav-card {
+        background: var(--card-bg2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.25s;
+      }
+      .fav-card:hover {
+        border-color: var(--gold);
+        transform: translateY(-2px);
+      }
+      .fav-img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #1e2530, #2a3548);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+      }
+      .fav-body {
+        padding: 12px;
+      }
+      .fav-name {
+        font-size: 0.87rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+      .fav-price {
+        font-size: 0.82rem;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .fav-actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      /* SETTINGS */
+      .settings-section {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .settings-section:last-child {
+        border-bottom: none;
+      }
+      .settings-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+      }
+      .setting-key {
+        font-size: 0.85rem;
+        color: var(--text);
+      }
+      .setting-val {
+        font-size: 0.83rem;
+        color: var(--text-muted);
+      }
+
+      /* MOBILE PROMO */
+      .app-promo {
+        background: linear-gradient(135deg, #1a1f2e, #1e2840);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 14px;
+        padding: 22px 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+      .app-promo-text h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .app-promo-text p {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+      .app-promo-btns {
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .app-btn {
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .app-btn:hover {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+      }
+
+      /* EMPTY STATE */
+      .empty-state {
+        text-align: center;
+        padding: 36px 20px;
+        color: var(--text-muted);
+      }
+      .empty-state i {
+        font-size: 2.4rem;
+        display: block;
+        margin-bottom: 10px;
+        opacity: 0.3;
+      }
+      .empty-state p {
+        font-size: 0.87rem;
+        margin-bottom: 14px;
+      }
+
+      /* NOTIFICATION BADGE */
+      .notif-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        display: inline-block;
+        margin-left: 4px;
+        vertical-align: middle;
+      }
+
+      /* TOGGLE */
+      .lang-options {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .lang-btn {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .lang-btn.active {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: rgba(212, 175, 55, 0.08);
+      }
+
+      .notif-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+      }
+      .toggle-switch {
+        width: 38px;
+        height: 20px;
+        border-radius: 10px;
+        background: #374151;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .toggle-switch.on {
+        background: rgba(34, 197, 94, 0.6);
+      }
+      .toggle-switch::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: white;
+        transition: transform 0.3s;
+      }
+      .toggle-switch.on::after {
+        transform: translateX(18px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP NAV -->
+    <nav class="topnav">
+      <div class="nav-brand">
+        <span class="brand-name">🏨 Blissful Abodes</span>
+        <span class="brand-sub">Chennai · Marina Beach Road</span>
+      </div>
+      <div class="nav-links">
+        <a href="{{ url_for('rooms') }}" class="nav-link"
+          ><i class="fas fa-door-open me-1"></i>Browse Rooms</a
+        >
+        <a href="{{ url_for('my_bookings') }}" class="nav-link"
+          ><i class="fas fa-calendar me-1"></i>My Bookings</a
+        >
+        <a href="{{ url_for('chatbot') }}" class="nav-link"
+          ><i class="fas fa-comments me-1"></i>AI Concierge</a
+        >
+        <a href="{{ url_for('reviews') }}" class="nav-link"
+          ><i class="fas fa-star me-1"></i>Reviews</a
+        >
+      </div>
+      <div class="nav-user">
+        <div class="user-ava">{{ user.get('name','G')[0].upper() }}</div>
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 600">
+            {{ user.get('name','Guest') }}
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-muted)">
+            ⚪ Guest
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout"
+          ><i class="fas fa-sign-out-alt"></i
+        ></a>
+      </div>
+    </nav>
+
+    <div class="container-lux">
+      <!-- FLASH MESSAGES -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}{% for category, message in messages %}
+      <div
+        class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-3"
+        role="alert"
+      >
+        {{ message }}<button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %}{% endif %}{% endwith %}
+
+      <!-- 1. WELCOME BANNER -->
+      <div class="welcome-banner">
+        <div class="welcome-greeting">🙏 Namaste</div>
+        <div class="welcome-name">{{ user.get('name','Valued Guest') }}</div>
+        <div class="welcome-sub">
+          Welcome back to Blissful Abodes Chennai &nbsp;·&nbsp; 123 Marina Beach
+          Road, Chennai 600001 {% if stats.get('upcoming',0) > 0 %}
+          &nbsp;·&nbsp;
+          <span style="color: var(--gold); font-weight: 600"
+            >{{ stats.get('upcoming',0) }} upcoming stay{{ 's' if
+            stats.get('upcoming',0)>1 else '' }}</span
+          >{% endif %}
+        </div>
+        <div class="loyalty-badge">
+          <div class="tier-label">Loyalty Tier</div>
+          <span class="tier-icon">
+            {% if loyalty_tier == 'Silver' %}🥈{% elif loyalty_tier == 'Gold'
+            %}🥇{% elif loyalty_tier == 'Platinum' %}💎{% else %}🏅{% endif %}
+          </span>
+          <div class="tier-name">{{ loyalty_tier }}</div>
+          <div class="tier-pts">{{ loyalty_points }} pts</div>
+        </div>
+      </div>
+
+      <!-- 2. QUICK STATS -->
+      <div class="stats-grid">
+        <div class="stat-card c1">
+          <div class="stat-icon">📅</div>
+          <div class="stat-value">{{ stats.get('upcoming',0) }}</div>
+          <div class="stat-label">Upcoming Stays</div>
+          <div class="stat-sub" style="color: #f0d080">Active reservations</div>
+        </div>
+        <div class="stat-card c2">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value">{{ stats.get('completed',0) }}</div>
+          <div class="stat-label">Completed Stays</div>
+          <div class="stat-sub" style="color: #60a5fa">Hotel visits</div>
+        </div>
+        <div class="stat-card c3">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value">
+            ₹{{ "{:,.0f}".format(stats.get('total_spent',0)|float) }}
+          </div>
+          <div class="stat-label">Total Spent</div>
+          <div class="stat-sub" style="color: #4ade80">Lifetime value</div>
+        </div>
+        <div class="stat-card c4">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value">{{ loyalty_points }}</div>
+          <div class="stat-label">Loyalty Points</div>
+          <div class="stat-sub" style="color: #a78bfa">
+            {{ loyalty_tier }} Member
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. QUICK ACTIONS -->
+      <div class="qa-grid">
+        <a href="{{ url_for('rooms') }}" class="qa-item">
+          <span class="qa-icon">🛏️</span>
+          <div class="qa-label">Browse Rooms</div>
+          <div class="qa-sub">100 luxury rooms</div>
+        </a>
+        <a href="{{ url_for('my_bookings') }}" class="qa-item">
+          <span class="qa-icon">📖</span>
+          <div class="qa-label">My Bookings</div>
+          <div class="qa-sub">View all reservations</div>
+        </a>
+        <a href="{{ url_for('chatbot') }}" class="qa-item">
+          <span class="qa-icon">💬</span>
+          <div class="qa-label">AI Concierge</div>
+          <div class="qa-sub">24/7 instant help</div>
+        </a>
+        <a href="{{ url_for('reviews') }}" class="qa-item">
+          <span class="qa-icon">⭐</span>
+          <div class="qa-label">Write a Review</div>
+          <div class="qa-sub">Share your experience</div>
+        </a>
+      </div>
+
+      <!-- 4. UPCOMING BOOKINGS -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-calendar-check"></i> Upcoming Stays
+        </div>
+        {% if upcoming_bookings %} {% for booking in upcoming_bookings[:3] %} {%
+        set ci = booking.get('check_in','') | string %}
+        <div class="ub-card">
+          <div class="ub-date">
+            <div class="month">{{ ci[5:7] }}/{{ ci[:4] }}</div>
+            <div class="day">{{ ci[8:10] if ci|length >= 10 else '??' }}</div>
+          </div>
+          <div class="ub-info">
+            <div class="room-name">
+              {{ booking.get('room_name', booking.get('room_id','Room')) }}
+            </div>
+            <div class="room-meta">
+              <i
+                class="fas fa-map-marker-alt me-1"
+                style="color: var(--gold)"
+              ></i
+              >Blissful Abodes Chennai &nbsp;·&nbsp;
+              <i class="fas fa-moon me-1"></i>{{ booking.get('nights',1) }}
+              night(s) &nbsp;·&nbsp; <i class="fas fa-user me-1"></i>{{
+              booking.get('guests',1) }} guest(s)
+            </div>
+            {% if booking.get('special_requests') %}
+            <div
+              style="font-size: 0.78rem; color: var(--gold); margin-top: 4px"
+            >
+              <i class="fas fa-info-circle me-1"></i>{{
+              booking.get('special_requests','') }}
+            </div>
+            {% endif %}
+            <div class="countdown" data-checkin="{{ ci }}">
+              <div class="cd-item">
+                <span class="cd-num cd-days">—</span
+                ><span class="cd-lbl">Days</span>
+              </div>
+              <div class="cd-item">
+                <span class="cd-num cd-hrs">—</span
+                ><span class="cd-lbl">Hours</span>
+              </div>
+              <div class="cd-item">
+                <span class="cd-num cd-min">—</span
+                ><span class="cd-lbl">Mins</span>
+              </div>
+            </div>
+          </div>
+          <div class="ub-amount">
+            <div class="amt">
+              ₹{{ "{:,.0f}".format(booking.get('total_price',0)|float) }}
+            </div>
+            <div class="nights">{{ booking.get('nights',1) }} night(s)</div>
+            <div style="margin-top: 8px">
+              <span
+                class="badge-lux {{ 'badge-confirmed' if booking.get('status')=='confirmed' else 'badge-pending' }}"
+                >{{ booking.get('status','pending')|upper }}</span
+              >
+            </div>
+            <div
+              style="margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap"
+            >
+              <a
+                href="{{ url_for('my_bookings') }}"
+                class="btn-lux btn-outline btn-sm"
+                >Details</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-state">
+          <i class="fas fa-bed"></i>
+          <p>No upcoming stays. Book your next luxury experience!</p>
+          <a href="{{ url_for('rooms') }}" class="btn-lux btn-gold"
+            ><i class="fas fa-search"></i>Explore Rooms</a
+          >
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- 5. PAST BOOKINGS + LOYALTY SIDE BY SIDE -->
+      <div class="grid-2">
+        <!-- PAST BOOKINGS TABLE -->
+        <div class="section-card" style="margin-bottom: 0">
+          <div class="section-title">
+            <i class="fas fa-history"></i> Booking History
+          </div>
+          {% if past_bookings %}
+          <table class="lux-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Stay Dates</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking in past_bookings[:6] %}
+              <tr>
+                <td>
+                  <div style="font-weight: 600; font-size: 0.85rem">
+                    {{ booking.get('room_name', booking.get('room_id','Room'))
+                    }}
+                  </div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted)">
+                    {{ booking.get('booking_id','—')[:8] if
+                    booking.get('booking_id') else '—' }}
+                  </div>
+                </td>
+                <td>
+                  <div style="font-size: 0.8rem">
+                    {{ booking.get('check_in','—')[:10] if
+                    booking.get('check_in') else '—' }}
+                  </div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted)">
+                    → {{ booking.get('check_out','—')[:10] if
+                    booking.get('check_out') else '—' }}
+                  </div>
+                </td>
+                <td style="font-weight: 600">
+                  ₹{{ "{:,.0f}".format(booking.get('total_price',0)|float) }}
+                </td>
+                <td>
+                  <span
+                    class="badge-lux {% if booking.get('status')=='completed' %}badge-completed{% elif booking.get('status')=='cancelled' %}badge-cancelled{% else %}badge-confirmed{% endif %}"
+                  >
+                    {{ booking.get('status','completed')|upper }}
+                  </span>
+                </td>
+                <td>
+                  <a
+                    href="{{ url_for('booking_detail', booking_id=booking.get('booking_id','')) if booking.get('booking_id') else '#' }}"
+                    class="btn-lux btn-outline btn-sm"
+                    title="View details"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-calendar-times"></i>
+            <p>No past bookings yet.</p>
+            <a href="{{ url_for('rooms') }}" class="btn-lux btn-gold"
+              ><i class="fas fa-plus"></i>Book Your First Stay</a
+            >
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- LOYALTY REWARDS -->
+        <div class="section-card" style="margin-bottom: 0">
+          <div class="section-title">
+            <i class="fas fa-trophy"></i> Loyalty Rewards
+          </div>
+
+          {% set tier_max = 5000 if loyalty_tier == 'Silver' else (15000 if
+          loyalty_tier == 'Gold' else 99999) %} {% set tier_min = 0 if
+          loyalty_tier == 'Silver' else (5001 if loyalty_tier == 'Gold' else
+          15001) %} {% set progress = ((loyalty_points - tier_min) / (tier_max -
+          tier_min) * 100) | round | int %} {% set progress = [progress, 100] |
+          min | int %}
+
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 6px;
+            "
+          >
+            <div>
+              <span
+                style="font-size: 1rem; font-weight: 700; color: var(--gold)"
+              >
+                {% if loyalty_tier == 'Silver' %}🥈{% elif loyalty_tier ==
+                'Gold' %}🥇{% else %}💎{% endif %} {{ loyalty_tier }} Member
+              </span>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted)"
+              >{{ loyalty_points }} pts</span
+            >
+          </div>
+          <div class="tier-progress-wrap">
+            <div class="tier-progress" style="width:{{ progress }}%;"></div>
+          </div>
+          <div
+            style="
+              font-size: 0.75rem;
+              color: var(--text-muted);
+              margin-bottom: 14px;
+            "
+          >
+            {% if loyalty_tier == 'Silver' %}{{ 5000 - loyalty_points }} more
+            points to Gold 🥇 {% elif loyalty_tier == 'Gold' %}{{ 15000 -
+            loyalty_points }} more points to Platinum 💎 {% else %}You've
+            reached the highest tier! 🎉{% endif %}
+          </div>
+
+          <div class="tier-milestones">
+            <div
+              class="tier-item {% if loyalty_tier == 'Silver' %}current{% endif %}"
+            >
+              <span class="tier-icon2">🥈</span>
+              <div class="tier-name2">Silver</div>
+              <div class="tier-pts2">0 – 5,000</div>
+            </div>
+            <div
+              class="tier-item {% if loyalty_tier == 'Gold' %}current{% endif %}"
+            >
+              <span class="tier-icon2">🥇</span>
+              <div class="tier-name2">Gold</div>
+              <div class="tier-pts2">5,001 – 15,000</div>
+            </div>
+            <div
+              class="tier-item {% if loyalty_tier == 'Platinum' %}current{% endif %}"
+            >
+              <span class="tier-icon2">💎</span>
+              <div class="tier-name2">Platinum</div>
+              <div class="tier-pts2">15,001+</div>
+            </div>
+            <div class="tier-item" style="background: rgba(212, 175, 55, 0.04)">
+              <span class="tier-icon2">🎁</span>
+              <div class="tier-name2">Redeem</div>
+              <div class="tier-pts2">1000 pts = ₹100</div>
+            </div>
+          </div>
+
+          <div class="tier-benefits" style="margin-top: 14px">
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              Your Current Benefits
+            </div>
+            {% if loyalty_tier == 'Silver' %}
+            <div class="benefit-item">
+              <i class="fas fa-tag"></i>5% discount on all bookings
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-headset"></i>Standard customer support
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-star"></i>Earn 10 pts per ₹100 spent
+            </div>
+            {% elif loyalty_tier == 'Gold' %}
+            <div class="benefit-item">
+              <i class="fas fa-tag"></i>10% discount on all bookings
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-clock"></i>Free late checkout (2 PM)
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-headset"></i>Priority customer support
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-birthday-cake"></i>Birthday special offer
+            </div>
+            {% else %}
+            <div class="benefit-item">
+              <i class="fas fa-tag"></i>15% discount on all bookings
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-arrow-up"></i>Complimentary room upgrades
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-clock"></i>Free early check-in + late checkout
+            </div>
+            <div class="benefit-item">
+              <i class="fas fa-concierge-bell"></i>Dedicated personal butler
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. MY REVIEWS -->
+      {% if reviews %}
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-star"></i> My Reviews ({{ reviews|length }})
+        </div>
+        <div class="grid-2">
+          {% for review in reviews[:2] %}
+          <div class="review-card">
+            <div class="review-stars">
+              {% for i in range(review.get('rating',5)|int) %}★{% endfor %}{%
+              for i in range(5 - review.get('rating',5)|int) %}☆{% endfor %}
+              &nbsp;<span style="color: var(--text-muted); font-size: 0.75rem"
+                >{{ review.get('rating',5) }}/5</span
+              >
+            </div>
+            <div class="review-text">
+              "{{ review.get('comment','Great stay!') }}"
+            </div>
+            <div class="review-meta">
+              <i class="fas fa-bed me-1"></i>{{ review.get('room_name',
+              review.get('room_id','Room')) }} &nbsp;·&nbsp; {{
+              review.get('created_at','')[:10] if review.get('created_at') else
+              '' }}
+            </div>
+            {% if review.get('response') %}
+            <div class="review-response">
+              <i class="fas fa-reply me-1" style="color: var(--gold)"></i
+              ><strong>Hotel Response:</strong> {{ review.get('response','') }}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if reviews|length > 2 %}
+        <div style="margin-top: 12px">
+          <a href="{{ url_for('reviews') }}" class="btn-lux btn-outline btn-sm"
+            ><i class="fas fa-eye me-1"></i>View All {{ reviews|length }}
+            Reviews</a
+          >
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- 7. FAVORITE ROOMS -->
+      {% if favorite_rooms %}
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-heart"></i> Saved Rooms ({{ favorite_rooms|length }})
+        </div>
+        <div class="fav-grid">
+          {% for room in favorite_rooms[:3] %}
+          <div class="fav-card">
+            <div class="fav-img">
+              {% if room.get('image_url') %}
+              <img
+                src="{{ room.get('image_url') }}"
+                alt="{{ room.get('name','Room') }}"
+                style="width: 100%; height: 120px; object-fit: cover"
+              />
+              {% else %}
+              <span>🛏️</span>
+              {% endif %}
+            </div>
+            <div class="fav-body">
+              <div class="fav-name">
+                {{ room.get('name', room.get('room_number','Room')) }}
+              </div>
+              <div class="fav-price">
+                ₹{{ "{:,.0f}".format(room.get('price',0)|float) }}/night
+              </div>
+              <div class="fav-actions">
+                <a
+                  href="{{ url_for('book_room', room_id=room.get('room_id','')) }}"
+                  class="btn-lux btn-gold btn-sm flex-fill justify-content-center"
+                  style="flex: 1"
+                  >Book</a
+                >
+                <form
+                  method="POST"
+                  action="{{ url_for('remove_from_favorites', room_id=room.get('room_id','')) }}"
+                  style="flex: 0"
+                >
+                  <button
+                    type="submit"
+                    class="btn-lux btn-outline btn-sm"
+                    title="Remove"
+                  >
+                    <i class="fas fa-heart-broken"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- 8. MOBILE APP PROMO -->
+      <div class="app-promo">
+        <div class="app-promo-text">
+          <h4>📱 Download Our Mobile App</h4>
+          <p>
+            Get exclusive app-only deals, early check-in reminders and instant
+            booking confirmations!
+          </p>
+        </div>
+        <div class="app-promo-btns">
+          <a href="#" class="app-btn"
+            ><i class="fab fa-google-play"></i>Play Store</a
+          >
+          <a href="#" class="app-btn"><i class="fab fa-apple"></i>App Store</a>
+        </div>
+      </div>
+
+      <!-- 9. ACCOUNT SETTINGS -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-user-cog"></i> Account Settings
+        </div>
+        <div class="grid-2">
+          <!-- Profile + Security -->
+          <div>
+            <div class="settings-section">
+              <div class="settings-label">
+                <i class="fas fa-user me-2" style="color: var(--gold)"></i
+                >Profile Information
+              </div>
+              <div class="setting-row">
+                <span class="setting-key">Full Name</span
+                ><span class="setting-val">{{ user.get('name','—') }}</span>
+              </div>
+              <div class="setting-row">
+                <span class="setting-key">Email</span
+                ><span class="setting-val">{{ user.get('email','—') }}</span>
+              </div>
+              <div class="setting-row">
+                <span class="setting-key">Phone</span
+                ><span class="setting-val"
+                  >{{ user.get('phone','+91 •••• ••••') }}</span
+                >
+              </div>
+              <div style="margin-top: 10px">
+                <a
+                  href="{{ url_for('account_settings') }}"
+                  class="btn-lux btn-outline btn-sm"
+                  ><i class="fas fa-edit me-1"></i>Edit Profile</a
+                >
+              </div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-label">
+                <i class="fas fa-lock me-2" style="color: var(--gold)"></i
+                >Security
+              </div>
+              <div class="setting-row">
+                <span class="setting-key">Password</span
+                ><span class="setting-val">••••••••</span>
+              </div>
+              <div style="margin-top: 10px; display: flex; gap: 8px">
+                <a
+                  href="{{ url_for('account_settings') }}"
+                  class="btn-lux btn-outline btn-sm"
+                  ><i class="fas fa-key me-1"></i>Change Password</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Notifications + Language -->
+          <div>
+            <div class="settings-section">
+              <div class="settings-label">
+                <i class="fas fa-bell me-2" style="color: var(--gold)"></i
+                >Notifications
+              </div>
+              <div class="notif-toggle">
+                <span style="font-size: 0.84rem"
+                  >Email booking confirmations</span
+                >
+                <div
+                  class="toggle-switch on"
+                  onclick="this.classList.toggle('on')"
+                ></div>
+              </div>
+              <div class="notif-toggle">
+                <span style="font-size: 0.84rem">SMS reminders</span>
+                <div
+                  class="toggle-switch on"
+                  onclick="this.classList.toggle('on')"
+                ></div>
+              </div>
+              <div class="notif-toggle">
+                <span style="font-size: 0.84rem">Promotional offers</span>
+                <div
+                  class="toggle-switch"
+                  onclick="this.classList.toggle('on')"
+                ></div>
+              </div>
+              <div class="notif-toggle">
+                <span style="font-size: 0.84rem">Loyalty points updates</span>
+                <div
+                  class="toggle-switch on"
+                  onclick="this.classList.toggle('on')"
+                ></div>
+              </div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-label">
+                <i class="fas fa-globe me-2" style="color: var(--gold)"></i
+                >Language Preference
+              </div>
+              <div class="lang-options">
+                <button class="lang-btn active">English</button>
+                <button
+                  class="lang-btn"
+                  onclick="
+                    this.closest('.lang-options')
+                      .querySelectorAll('.lang-btn')
+                      .forEach((b) => b.classList.remove('active'));
+                    this.classList.add('active');
+                  "
+                >
+                  हिंदी
+                </button>
+                <button
+                  class="lang-btn"
+                  onclick="
+                    this.closest('.lang-options')
+                      .querySelectorAll('.lang-btn')
+                      .forEach((b) => b.classList.remove('active'));
+                    this.classList.add('active');
+                  "
+                >
+                  தமிழ்
+                </button>
+              </div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-label">
+                <i
+                  class="fas fa-credit-card me-2"
+                  style="color: var(--gold)"
+                ></i
+                >Payment Methods
+              </div>
+              <div
+                style="
+                  font-size: 0.84rem;
+                  color: var(--text-muted);
+                  margin-bottom: 8px;
+                "
+              >
+                UPI, Credit/Debit Cards, Net Banking, Wallets, EMI
+              </div>
+              <a
+                href="{{ url_for('account_settings') }}"
+                class="btn-lux btn-outline btn-sm"
+                ><i class="fas fa-plus me-1"></i>Manage Payment Methods</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /container-lux -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Countdown timers
+      document.querySelectorAll(".countdown[data-checkin]").forEach((el) => {
+        const checkin = el.dataset.checkin;
+        if (!checkin) return;
+        function update() {
+          const target = new Date(checkin + "T14:00:00");
+          const now = new Date();
+          const diff = target - now;
+          if (diff <= 0) {
+            el.querySelector(".cd-days").textContent = "0";
+            el.querySelector(".cd-hrs").textContent = "0";
+            el.querySelector(".cd-min").textContent = "0";
+            return;
+          }
+          const days = Math.floor(diff / 86400000);
+          const hrs = Math.floor((diff % 86400000) / 3600000);
+          const min = Math.floor((diff % 3600000) / 60000);
+          el.querySelector(".cd-days").textContent = days;
+          el.querySelector(".cd-hrs").textContent = hrs;
+          el.querySelector(".cd-min").textContent = min;
+        }
+        update();
+        setInterval(update, 60000);
+      });
+
+      // Animate loyalty progress bar
+      setTimeout(() => {
+        document.querySelectorAll(".tier-progress").forEach((el) => {
+          el.style.width = el.style.width; // trigger reflow
+        });
+      }, 200);
+    </script>
+  </body>
+</html>

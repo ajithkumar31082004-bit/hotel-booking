@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard — Blissful Abodes Chennai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --gold:#d4af37; --gold-l:#f0d080; --dark:#0d1117; --card:#161b22; --card2:#1e2530; --bdr:rgba(212,175,55,0.2); --txt:#e6edf3; --muted:rgba(230,237,243,0.45); --sw:240px; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--dark); color:var(--txt); font-family:'Inter',sans-serif; display:flex; min-height:100vh; }
+
+        /* SIDEBAR */
+        .sidebar { width:var(--sw); background:var(--card); border-right:1px solid var(--bdr); position:fixed; top:0; left:0; height:100vh; overflow-y:auto; z-index:100; display:flex; flex-direction:column; }
+        .sl { padding:20px 16px; border-bottom:1px solid var(--bdr); }
+        .sl .br { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.1rem; font-weight:700; }
+        .sl .sub { color:#fbbf24; font-size:0.7rem; margin-top:2px; font-weight:600; letter-spacing:1px; }
+        .suser { padding:14px 16px; border-bottom:1px solid var(--bdr); display:flex; align-items:center; gap:10px; }
+        .ava-m { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; font-size:0.95rem; font-weight:700; color:#0d1117; flex-shrink:0; }
+        .snav { padding:12px 0; flex:1; }
+        .nsec { padding:7px 16px 3px; font-size:0.65rem; text-transform:uppercase; letter-spacing:2px; color:var(--muted); font-weight:600; }
+        .ni { display:flex; align-items:center; gap:9px; padding:9px 16px; color:var(--muted); font-size:0.83rem; font-weight:500; cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:3px solid transparent; }
+        .ni:hover,.ni.active { color:var(--txt); background:rgba(212,175,55,0.07); border-left-color:var(--gold); }
+        .ni i { width:15px; text-align:center; font-size:0.8rem; }
+        .sbottom { padding:12px 16px; border-top:1px solid var(--bdr); }
+        .main { margin-left:var(--sw); flex:1; }
+        .topbar { background:var(--card); border-bottom:1px solid var(--bdr); padding:13px 26px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+        .topbar h1 { font-size:1.1rem; font-weight:700; }
+        .tbadge { padding:4px 12px; border-radius:20px; font-size:0.71rem; font-weight:600; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#fbbf24; }
+        .btn-tb { padding:6px 13px; border-radius:7px; font-size:0.79rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+        .btn-g { background:var(--gold); color:#0d1117; }
+        .btn-out { background:transparent; border:1px solid var(--bdr); color:var(--muted); }
+        .content { padding:24px 26px; }
+
+        /* KPI CARDS */
+        .kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+        .kpi-card { background:var(--card); border:1px solid var(--bdr); border-radius:12px; padding:18px 16px; position:relative; overflow:hidden; transition:all 0.3s; }
+        .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+        .kc1::before{background:linear-gradient(90deg,#22c55e,#4ade80);}
+        .kc2::before{background:linear-gradient(90deg,#d4af37,#f0d080);}
+        .kc3::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+        .kc4::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+        .kc5::before{background:linear-gradient(90deg,#ec4899,#f472b6);}
+        .kc6::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+        .kpi-card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.3); }
+        .kpi-icon { font-size:1.1rem; margin-bottom:8px; }
+        .kpi-value { font-size:1.6rem; font-weight:700; line-height:1; margin-bottom:3px; }
+        .kpi-label { font-size:0.69rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+        .kpi-sub { font-size:0.69rem; margin-top:4px; }
+
+        /* CARDS */
+        .card2 { background:var(--card); border:1px solid var(--bdr); border-radius:13px; padding:20px; margin-bottom:18px; }
+        .stit { font-size:0.95rem; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+        .stit i { color:var(--gold); }
+        .g2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+
+        /* TABLES */
+        .ltable { width:100%; border-collapse:collapse; }
+        .ltable th { padding:8px 12px; font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); border-bottom:1px solid var(--bdr); text-align:left; }
+        .ltable td { padding:10px 12px; font-size:0.82rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+        .ltable tr:hover td { background:rgba(212,175,55,0.025); }
+        .bl { padding:3px 8px; border-radius:5px; font-size:0.69rem; font-weight:600; }
+        .bs { background:rgba(34,197,94,0.14); color:#4ade80; }
+        .bw { background:rgba(245,158,11,0.14); color:#fbbf24; }
+        .bd { background:rgba(239,68,68,0.14); color:#f87171; }
+        .bi { background:rgba(59,130,246,0.14); color:#60a5fa; }
+        .bp { background:rgba(139,92,246,0.14); color:#a78bfa; }
+
+        /* SHIFT SCHEDULE */
+        .shift-table { width:100%; border-collapse:collapse; }
+        .shift-table th { padding:7px 10px; font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); border-bottom:1px solid var(--bdr); text-align:center; }
+        .shift-table td { padding:8px 10px; font-size:0.8rem; border-bottom:1px solid rgba(255,255,255,0.04); text-align:center; }
+        .shift-m { background:rgba(34,197,94,0.15); color:#4ade80; border-radius:5px; padding:2px 8px; font-size:0.72rem; font-weight:600; }
+        .shift-e { background:rgba(245,158,11,0.15); color:#fbbf24; border-radius:5px; padding:2px 8px; font-size:0.72rem; font-weight:600; }
+        .shift-n { background:rgba(139,92,246,0.15); color:#a78bfa; border-radius:5px; padding:2px 8px; font-size:0.72rem; font-weight:600; }
+        .shift-off { color:var(--muted); font-size:0.72rem; }
+
+        /* STAR RATING */
+        .star-gold { color:var(--gold); }
+
+        /* INVENTORY */
+        .inv-bar { height:6px; border-radius:3px; background:rgba(255,255,255,0.07); overflow:hidden; }
+        .inv-bar-fill { height:100%; border-radius:3px; }
+
+        /* APPROVALS */
+        .appr-card { background:var(--card2); border:1px solid var(--bdr); border-radius:9px; padding:13px; margin-bottom:8px; }
+        .appr-type { font-size:0.75rem; color:var(--gold); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px; }
+        .appr-detail { font-size:0.83rem; margin-bottom:6px; }
+        .appr-actions { display:flex; gap:6px; }
+        .btn-approve { padding:4px 12px; background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; }
+        .btn-reject { padding:4px 12px; background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; }
+
+        /* FEEDBACK */
+        .review-item { padding:11px 14px; background:var(--card2); border:1px solid var(--bdr); border-radius:9px; margin-bottom:8px; }
+        .review-stars { color:var(--gold); font-size:0.82rem; }
+
+        /* DEPT CHAT */
+        .chat-msg { padding:9px 12px; background:var(--card2); border-radius:8px; margin-bottom:6px; }
+        .chat-from { font-size:0.72rem; color:var(--gold); font-weight:600; margin-bottom:2px; }
+        .chat-text { font-size:0.82rem; }
+
+        /* PERF BAR */
+        .perf-bar { display:inline-block; width:60px; height:6px; background:rgba(255,255,255,0.07); border-radius:3px; vertical-align:middle; overflow:hidden; }
+        .perf-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#22c55e,#4ade80); }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sl">
+            <div class="br">🏨 Blissful Abodes</div>
+            <div class="sub">🟡 MANAGER PANEL</div>
+        </div>
+        <div class="suser">
+            <div class="ava-m">{{ user.get('name','M')[0].upper() }}</div>
+            <div>
+                <div style="font-weight:600;font-size:0.84rem;">{{ user.get('name','Manager') }}</div>
+                <div style="font-size:0.7rem;color:#fbbf24;">{{ user.get('department','Dept Manager') }}</div>
+            </div>
+        </div>
+        <nav class="snav">
+            <div class="nsec">Overview</div>
+            <a href="{{ url_for('manager_dashboard') }}" class="ni active"><i class="fas fa-chart-bar"></i> Dashboard</a>
+            <div class="nsec">Operations</div>
+            <a href="{{ url_for('staff_dashboard') }}" class="ni"><i class="fas fa-concierge-bell"></i> Staff Operations</a>
+            <a href="{{ url_for('rooms') }}" class="ni"><i class="fas fa-door-open"></i> Room Inventory</a>
+            <div class="nsec">Management</div>
+            <a href="#team" class="ni"><i class="fas fa-users"></i> Team Management</a>
+            <a href="#schedule" class="ni"><i class="fas fa-calendar-alt"></i> Shift Schedule</a>
+            <a href="#inventory" class="ni"><i class="fas fa-boxes"></i> Inventory</a>
+            <a href="#approvals" class="ni"><i class="fas fa-check-square"></i> Pending Approvals</a>
+            <div class="nsec">Reports</div>
+            <a href="#feedback" class="ni"><i class="fas fa-star"></i> Guest Feedback</a>
+            <a href="#reports" class="ni"><i class="fas fa-file-alt"></i> Operations Report</a>
+        </nav>
+        <div class="sbottom">
+            <a href="{{ url_for('logout') }}" class="ni" style="color:#f87171;border:none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1>🟡 Manager Dashboard</h1>
+                <p style="color:var(--muted);font-size:0.77rem;margin-top:2px;">Blissful Abodes Chennai · {{ now.strftime('%A, %d %B %Y') }}</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tbadge">🟡 MANAGER — LEVEL 3</span>
+                <a href="{{ url_for('staff_dashboard') }}" class="btn-tb btn-g"><i class="fas fa-concierge-bell me-1"></i>Staff View</a>
+                <a href="{{ url_for('logout') }}" class="btn-tb btn-out"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-3" role="alert">
+                {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}{% endif %}{% endwith %}
+
+            <!-- MANAGER OVERVIEW HEADER -->
+            <div class="card2" style="background:linear-gradient(135deg,var(--card) 0%,rgba(245,158,11,0.05) 100%);border-left:4px solid #f59e0b;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                    <div>
+                        <div style="font-size:0.75rem;color:#fbbf24;font-weight:600;text-transform:uppercase;letter-spacing:2px;">MANAGER</div>
+                        <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;">{{ user.get('name','Suresh Menon') }}</div>
+                        <div style="font-size:0.82rem;color:var(--muted);margin-top:2px;">
+                            <i class="fas fa-building me-2" style="color:var(--gold);"></i>{{ user.get('department','Front Office') }} Department
+                            &nbsp;·&nbsp; <i class="fas fa-users me-1" style="color:var(--gold);"></i>Team: {{ staff_members|default([])|length }} members
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.7rem;color:var(--muted);">Today</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:var(--gold);">{{ now.strftime('%d %b %Y') if now else 'Today' }}</div>
+                        <div style="font-size:0.8rem;color:var(--muted);">{{ now.strftime('%H:%M') if now else '12:00' }} IST</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI CARDS (6) -->
+            <div class="kpi-grid">
+                <div class="kpi-card kc1">
+                    <div class="kpi-icon">💰</div>
+                    <div class="kpi-value">₹{{ "{:,.0f}".format(today_revenue|default(0)) }}</div>
+                    <div class="kpi-label">Today's Revenue</div>
+                    <div class="kpi-sub" style="color:#4ade80;">From {{ todays_checkins|default([])|length }} check-ins</div>
+                </div>
+                <div class="kpi-card kc2">
+                    <div class="kpi-icon">🏨</div>
+                    <div class="kpi-value">{{ occupancy_rate|default(0) }}%</div>
+                    <div class="kpi-label">Occupancy Rate</div>
+                    <div class="kpi-sub" style="color:var(--gold);">{{ occupied_rooms|default(0) }}/{{ total_rooms|default(0) }} rooms</div>
+                </div>
+                <div class="kpi-card kc3">
+                    <div class="kpi-icon">👥</div>
+                    <div class="kpi-value">{{ staff_members|default([])|length }}</div>
+                    <div class="kpi-label">Dept Staff</div>
+                    <div class="kpi-sub" style="color:#60a5fa;">On duty today</div>
+                </div>
+                <div class="kpi-card kc4">
+                    <div class="kpi-icon">⭐</div>
+                    <div class="kpi-value">{{ avg_rating|default(4.5) }}/5</div>
+                    <div class="kpi-label">Guest Satisfaction</div>
+                    <div class="kpi-sub" style="color:#a78bfa;">{{ all_reviews|default([])|length }} reviews</div>
+                </div>
+                <div class="kpi-card kc5">
+                    <div class="kpi-icon">⏳</div>
+                    <div class="kpi-value">{{ pending_requests|default([])|length }}</div>
+                    <div class="kpi-label">Pending Requests</div>
+                    <div class="kpi-sub" style="color:#f472b6;">Needs attention</div>
+                </div>
+                <div class="kpi-card kc6">
+                    <div class="kpi-icon">✅</div>
+                    <div class="kpi-value">{{ todays_checkins|default([])|length + todays_checkouts|default([])|length }}</div>
+                    <div class="kpi-label">Tasks Completed</div>
+                    <div class="kpi-sub" style="color:#fbbf24;">Check-ins + outs</div>
+                </div>
+            </div>
+
+            <!-- TEAM MANAGEMENT -->
+            <div class="card2" id="team">
+                <div class="stit"><i class="fas fa-users"></i> Team Management
+                    <a href="#" class="btn-tb btn-g" style="margin-left:auto;font-size:0.76rem;padding:5px 12px;"><i class="fas fa-plus me-1"></i>Assign Task</a>
+                </div>
+                <table class="ltable">
+                    <thead>
+                        <tr><th>Staff Name</th><th>Role</th><th>Shift</th><th>Status</th><th>Tasks</th><th>Performance</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% if staff_members %}
+                        {% for staff in staff_members[:8] %}
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;font-size:0.84rem;">{{ staff.get('name','Staff') }}</div>
+                                <div style="font-size:0.7rem;color:var(--muted);">{{ staff.get('email','—')[:25] }}</div>
+                            </td>
+                            <td><span class="bl bs">STAFF</span></td>
+                            <td>
+                                <span class="shift-m">Morning</span>
+                            </td>
+                            <td><span class="bl bs">On Duty</span></td>
+                            <td style="font-weight:600;">{{ loop.index * 2 + 4 }}</td>
+                            <td>
+                                {% set perf = 95 - loop.index * 3 %}
+                                {% if perf < 80 %}{% set perf = 80 %}{% endif %}
+                                <span style="font-size:0.82rem;font-weight:600;color:#4ade80;">{{ perf }}%</span>
+                                <div class="perf-bar"><div class="perf-fill" style="width:{{ perf }}%;"></div></div>
+                            </td>
+                            <td>
+                                <button class="bl bi" onclick="alert('Review submitted!')" style="cursor:pointer;border:none;">Review</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        {% for name, shift, perf in [('Priya Sharma','Morning',95),('Raj Kumar','Morning',92),('Lakshmi Iyer','Evening',88),('Ravi Menon','Evening',90),('Meena Patel','Night',85)] %}
+                        <tr>
+                            <td><div style="font-weight:600;font-size:0.84rem;">{{ name }}</div></td>
+                            <td><span class="bl bs">STAFF</span></td>
+                            <td>
+                                {% if shift == 'Morning' %}<span class="shift-m">M</span>
+                                {% elif shift == 'Evening' %}<span class="shift-e">E</span>
+                                {% else %}<span class="shift-n">N</span>{% endif %}
+                            </td>
+                            <td><span class="bl {{ 'bs' if shift in ['Morning','Evening'] else 'bp' }}">{{ 'On Duty' if shift in ['Morning'] else ('Scheduled' if shift == 'Evening' else 'Off') }}</span></td>
+                            <td style="font-weight:600;">{{ loop.index * 2 + 3 }}</td>
+                            <td>
+                                {% set perf_val = perf %}
+                                {% if perf_val < 80 %}{% set perf_val = 80 %}{% endif %}
+                                <span style="font-size:0.82rem;font-weight:600;color:#4ade80;">{{ perf_val }}%</span>
+                                <div class="perf-bar"><div class="perf-fill" style="width:{{ perf_val }}%;"></div></div>
+                            </td>
+                            <td><button class="bl bi" onclick="alert('Review submitted!')" style="cursor:pointer;border:none;">Review</button></td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SHIFT SCHEDULE + GUEST FEEDBACK -->
+            <div class="g2">
+                <!-- SHIFT SCHEDULE -->
+                <div class="card2" id="schedule">
+                    <div class="stit"><i class="fas fa-calendar-week"></i> Weekly Shift Schedule
+                        <button class="btn-tb btn-out" style="margin-left:auto;font-size:0.73rem;padding:4px 10px;" onclick="alert('Edit schedule mode!')"><i class="fas fa-edit me-1"></i>Edit</button>
+                    </div>
+                    <table class="shift-table">
+                        <thead><tr><th>Staff</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr></thead>
+                        <tbody>
+                            {% for name, days in [
+                              ('Priya S.',['M','M','M','E','E']),
+                              ('Raj K.',['M','M','E','E','M']),
+                              ('Lakshmi I.',['E','E','E','M','M']),
+                              ('Ravi M.',['E','N','N','N','E']),
+                              ('Meena P.',['N','N','M','M','N'])
+                            ] %}
+                            <tr>
+                                <td style="font-weight:600;text-align:left;font-size:0.81rem;">{{ name }}</td>
+                                {% for d in days %}
+                                <td>
+                                    {% if d == 'M' %}<span class="shift-m">M</span>
+                                    {% elif d == 'E' %}<span class="shift-e">E</span>
+                                    {% elif d == 'N' %}<span class="shift-n">N</span>
+                                    {% else %}<span class="shift-off">OFF</span>{% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="margin-top:12px;font-size:0.72rem;color:var(--muted);display:flex;gap:12px;">
+                        <span><span class="shift-m">M</span> = Morning (6–2)</span>
+                        <span><span class="shift-e">E</span> = Evening (2–10)</span>
+                        <span><span class="shift-n">N</span> = Night (10–6)</span>
+                    </div>
+                </div>
+
+                <!-- GUEST FEEDBACK -->
+                <div class="card2" id="feedback">
+                    <div class="stit"><i class="fas fa-star"></i> Guest Feedback Monitor</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <div>
+                            <div style="font-size:2rem;font-weight:700;color:var(--gold);">{{ avg_rating }}<span style="font-size:1rem;">/5.0</span></div>
+                            <div style="font-size:0.76rem;color:var(--muted);">Average This Week</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.82rem;font-weight:600;">{{ all_reviews|length }} total reviews</div>
+                            <div style="font-size:0.72rem;color:#4ade80;">Response Rate: 95%</div>
+                        </div>
+                    </div>
+                    {% if all_reviews %}
+                    {% for review in all_reviews[:3] %}
+                    <div class="review-item">
+                        <div class="review-stars">{% for i in range(review.get('rating',5)|int) %}★{% endfor %}{% for i in range(5-review.get('rating',5)|int) %}☆{% endfor %}</div>
+                        <div style="font-size:0.82rem;margin:3px 0;">"{{ review.get('comment','Great stay!')[:80] }}"</div>
+                        <div style="font-size:0.7rem;color:var(--muted);">{{ review.get('user_name','Guest') }} · {{ review.get('room_id','—') }}</div>
+                        {% if review.get('rating',5)|int < 4 %}
+                        <div style="margin-top:6px;"><button class="btn-approve" style="font-size:0.69rem;" onclick="alert('Response submitted!')"><i class="fas fa-reply me-1"></i>Respond</button></div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    {% for stars, text, name, room in [
+                      (5,'Excellent service! Front desk staff very helpful.','Rajesh K.','D125'),
+                      (3,'Room service was a bit slow. Could improve.','Anita D.','V190'),
+                      (4,'Comfortable room, great amenities.','Vikram S.','F155')
+                    ] %}
+                    <div class="review-item">
+                        <div class="review-stars">{% for i in range(stars) %}★{% endfor %}{% for i in range(5-stars) %}☆{% endfor %}</div>
+                        <div style="font-size:0.82rem;margin:3px 0;">"{{ text }}"</div>
+                        <div style="font-size:0.7rem;color:var(--muted);">{{ name }} · {{ room }}</div>
+                        {% if stars < 4 %}<div style="margin-top:6px;"><button class="btn-approve" style="font-size:0.69rem;" onclick="alert('Response submitted!')"><i class="fas fa-reply me-1"></i>Respond</button></div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- INVENTORY + PENDING APPROVALS -->
+            <div class="g2">
+                <!-- INVENTORY -->
+                <div class="card2" id="inventory">
+                    <div class="stit"><i class="fas fa-boxes"></i> Inventory Dashboard
+                        <button class="btn-tb btn-g" style="margin-left:auto;font-size:0.73rem;padding:5px 10px;" onclick="alert('Purchase order raised!')"><i class="fas fa-shopping-cart me-1"></i>Order</button>
+                    </div>
+                    <table class="ltable">
+                        <thead><tr><th>Item</th><th>Stock</th><th>Reorder At</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            {% for item in inventory %}
+                            <tr>
+                                <td style="font-weight:600;">{{ item.item }}</td>
+                                <td>{{ item.stock }}</td>
+                                <td style="color:var(--muted);">{{ item.reorder }}</td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <span class="bl {{ 'bd' if item.status=='critical' else ('bw' if item.status=='low' else 'bs') }}">
+                                            {{ '🔴 Critical' if item.status=='critical' else ('🟡 Low' if item.status=='low' else '🟢 OK') }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if item.status in ['critical','low'] %}
+                                    <button class="btn-approve" style="font-size:0.69rem;" onclick="alert('Order placed for {{ item.item }}!')">Order</button>
+                                    {% else %}—{% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PENDING APPROVALS -->
+                <div class="card2" id="approvals">
+                    <div class="stit"><i class="fas fa-check-square"></i> Pending Approvals
+                        <span style="background:#ef4444;color:white;border-radius:10px;padding:1px 7px;font-size:0.68rem;margin-left:6px;font-weight:700;">{{ pending_approvals|length }}</span>
+                    </div>
+                    {% for appr in pending_approvals %}
+                    <div class="appr-card">
+                        <div class="appr-type">{{ appr.type }}</div>
+                        <div class="appr-detail">{{ appr.detail }}</div>
+                        {% if appr.get('amount') %}
+                        <div style="font-size:0.78rem;color:#fbbf24;margin-bottom:6px;"><i class="fas fa-rupee-sign me-1"></i>{{ appr.amount }}</div>
+                        {% endif %}
+                        {% if appr.get('reason') %}
+                        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:6px;"><i class="fas fa-info-circle me-1"></i>{{ appr.reason }}</div>
+                        {% endif %}
+                        <div class="appr-actions">
+                            <button class="btn-approve" onclick="this.closest('.appr-card').style.opacity='0.5';this.textContent='✓ Approved'"><i class="fas fa-check me-1"></i>Approve</button>
+                            <button class="btn-reject" onclick="this.closest('.appr-card').style.opacity='0.5';this.textContent='✗ Rejected'"><i class="fas fa-times me-1"></i>Reject</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- OPERATIONS REPORT -->
+            <div class="card2" id="reports">
+                <div class="stit"><i class="fas fa-file-chart-line"></i> Operations Report (Today)
+                    <div style="margin-left:auto;display:flex;gap:8px;">
+                        <button class="btn-tb btn-g" onclick="alert('Report downloaded!')" style="font-size:0.73rem;padding:5px 10px;"><i class="fas fa-download me-1"></i>Download</button>
+                        <button class="btn-tb btn-out" onclick="alert('Report emailed!')" style="font-size:0.73rem;padding:5px 10px;"><i class="fas fa-envelope me-1"></i>Email</button>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                    {% for icon, label, value, color in [
+                      ('✅','Check-ins Processed',todays_checkins|default([])|length,'#4ade80'),
+                      ('🚪','Check-outs Processed',todays_checkouts|default([])|length,'#4ade80'),
+                      ('⏳','Pending Requests',pending_requests|default([])|length,'#fbbf24'),
+                      ('💰','Revenue Collected','₹' ~ "{:,.0f}".format(today_revenue|default(0)),'var(--gold)')
+                    ] %}
+                    <div style="padding:14px;background:var(--card2);border-radius:10px;border:1px solid var(--bdr);text-align:center;">
+                        <div style="font-size:1.3rem;margin-bottom:6px;">{{ icon }}</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:{{ color }};">{{ value }}</div>
+                        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px;">{{ label }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- DEPT COMMUNICATION -->
+            <div class="card2">
+                <div class="stit"><i class="fas fa-comments"></i> Department Communication</div>
+                <div class="g2">
+                    <div>
+                        <div class="chat-msg"><div class="chat-from">Housekeeping Manager (11:00 AM)</div><div class="chat-text">V190 ready for VIP guest — room inspected ✓</div></div>
+                        <div class="chat-msg"><div class="chat-from" style="color:#4ade80;">You (11:05 AM)</div><div class="chat-text">Thanks! Guest arriving at 3 PM. Fruit basket arranged?</div></div>
+                        <div class="chat-msg"><div class="chat-from">Maintenance (11:30 AM)</div><div class="chat-text">AC fixed in V195 — issue resolved.</div></div>
+                    </div>
+                    <div>
+                        <textarea rows="4" placeholder="Send message to department..." style="width:100%;background:var(--card2);border:1px solid var(--bdr);border-radius:8px;padding:10px;color:var(--txt);font-size:0.82rem;resize:vertical;margin-bottom:8px;"></textarea>
+                        <button class="btn-approve" style="width:100%;justify-content:center;font-size:0.8rem;" onclick="alert('Message sent to department!')"><i class="fas fa-paper-plane me-1"></i>Send Message</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

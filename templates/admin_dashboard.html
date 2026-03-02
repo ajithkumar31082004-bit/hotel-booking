@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Blissful Abodes Chennai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root{--gold:#d4af37;--gold-l:#f0d080;--dark:#0d1117;--card:#161b22;--card2:#1e2530;--bdr:rgba(212,175,55,0.2);--txt:#e6edf3;--muted:rgba(230,237,243,0.45);--sw:250px;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:var(--dark);color:var(--txt);font-family:'Inter',sans-serif;display:flex;min-height:100vh;}
+
+        .sidebar{width:var(--sw);background:var(--card);border-right:1px solid var(--bdr);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
+        .sl{padding:20px 16px;border-bottom:1px solid var(--bdr);}
+        .sl .br{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;font-weight:700;}
+        .sl .sub{color:#e879f9;font-size:0.7rem;margin-top:2px;font-weight:600;letter-spacing:1px;}
+        .suser{padding:14px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;}
+        .ava-a{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#e879f9,#a855f7);display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 0 12px rgba(232,121,249,0.3);}
+        .snav{padding:12px 0;flex:1;}
+        .nsec{padding:7px 16px 3px;font-size:0.64rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:600;}
+        .ni{display:flex;align-items:center;gap:9px;padding:9px 16px;color:var(--muted);font-size:0.83rem;font-weight:500;cursor:pointer;transition:all 0.2s;text-decoration:none;border-left:3px solid transparent;}
+        .ni:hover,.ni.active{color:var(--txt);background:rgba(212,175,55,0.07);border-left-color:var(--gold);}
+        .ni i{width:15px;text-align:center;font-size:0.8rem;}
+        .sbottom{padding:12px 16px;border-top:1px solid var(--bdr);}
+        .main{margin-left:var(--sw);flex:1;}
+        .topbar{background:linear-gradient(90deg,var(--card) 0%,rgba(232,121,249,0.06) 100%);border-bottom:1px solid var(--bdr);padding:13px 26px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+        .topbar h1{font-size:1.1rem;font-weight:700;}
+        .tbadge{padding:4px 12px;border-radius:20px;font-size:0.71rem;font-weight:600;background:rgba(232,121,249,0.12);border:1px solid rgba(232,121,249,0.3);color:#e879f9;}
+        .btn-tb{padding:6px 13px;border-radius:7px;font-size:0.79rem;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+        .btn-g{background:var(--gold);color:#0d1117;}
+        .btn-out{background:transparent;border:1px solid var(--bdr);color:var(--muted);}
+        .content{padding:24px 26px;}
+
+        /* KPI 4-col grid */
+        .kpi-grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px;}
+        @media(max-width:1100px){.kpi-grid8{grid-template-columns:repeat(2,1fr);}}
+        .kc{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px 14px;position:relative;overflow:hidden;transition:all 0.3s;}
+        .kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+        .kc1::before{background:linear-gradient(90deg,#22c55e,#4ade80);}
+        .kc2::before{background:linear-gradient(90deg,#d4af37,#f0d080);}
+        .kc3::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+        .kc4::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+        .kc5::before{background:linear-gradient(90deg,#ec4899,#f472b6);}
+        .kc6::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+        .kc7::before{background:linear-gradient(90deg,#06b6d4,#67e8f9);}
+        .kc8::before{background:linear-gradient(90deg,#ef4444,#f87171);}
+        .kc:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+        .kv{font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:3px;margin-top:8px;}
+        .kl{font-size:0.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+        .ks{font-size:0.68rem;margin-top:3px;}
+
+        /* CARDS */
+        .card2{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:20px;margin-bottom:18px;}
+        .stit{font-size:0.95rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+        .stit i{color:var(--gold);}
+        .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+        .g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+        @media(max-width:960px){.g2,.g3{grid-template-columns:1fr;}}
+
+        /* TABLES */
+        .ltable{width:100%;border-collapse:collapse;}
+        .ltable th{padding:8px 12px;font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--bdr);text-align:left;}
+        .ltable td{padding:10px 12px;font-size:0.82rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+        .ltable tr:hover td{background:rgba(212,175,55,0.025);}
+        .bl{padding:3px 8px;border-radius:5px;font-size:0.69rem;font-weight:600;}
+        .bs{background:rgba(34,197,94,0.14);color:#4ade80;}
+        .bw{background:rgba(245,158,11,0.14);color:#fbbf24;}
+        .bd{background:rgba(239,68,68,0.14);color:#f87171;}
+        .bi{background:rgba(59,130,246,0.14);color:#60a5fa;}
+        .bp{background:rgba(139,92,246,0.14);color:#a78bfa;}
+
+        /* STAR BARS */
+        .star-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+        .star-bar-bg{flex:1;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;}
+        .star-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:4px;}
+        .star-label{font-size:0.76rem;color:var(--muted);width:45px;text-align:right;}
+        .star-count{font-size:0.76rem;width:28px;}
+
+        /* PROGRESS */
+        .prog-wrap{height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-top:4px;}
+        .prog-fill{height:100%;border-radius:3px;}
+
+        /* COUPON */
+        .coupon-card{background:var(--card2);border:1px solid var(--bdr);border-radius:10px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:14px;}
+        .coupon-code{font-size:1rem;font-weight:800;color:var(--gold);letter-spacing:1px;font-family:monospace;}
+        .coupon-detail{font-size:0.8rem;color:var(--muted);}
+        .coupon-badge{margin-left:auto;font-size:0.72rem;}
+
+        /* CHART */
+        .chart-wrap{position:relative;height:200px;}
+
+        /* ALERT ITEM */
+        .alert-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card2);border-radius:8px;margin-bottom:7px;border:1px solid;}
+        .alert-item.red-bdr{border-color:rgba(239,68,68,0.3);}
+        .alert-item.yellow-bdr{border-color:rgba(245,158,11,0.3);}
+        .alert-item.blue-bdr{border-color:rgba(59,130,246,0.3);}
+        .alert-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem;}
+
+        /* SETTINGS TABS */
+        .stab{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+        .stab-btn{padding:6px 14px;border-radius:7px;font-size:0.78rem;font-weight:600;border:1px solid var(--bdr);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+        .stab-btn.active{background:rgba(212,175,55,0.1);border-color:var(--gold);color:var(--gold);}
+        .input-lux{width:100%;background:var(--card2);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--txt);font-size:0.84rem;outline:none;}
+        .input-lux:focus{border-color:var(--gold);}
+        label.lbl{font-size:0.74rem;color:var(--muted);display:block;margin-bottom:4px;}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sl">
+            <div class="br">🏨 Blissful Abodes</div>
+            <div class="sub">🟠 ADMIN PANEL</div>
+        </div>
+        <div class="suser">
+            <div class="ava-a">{{ user.get('name','A')[0].upper() }}</div>
+            <div>
+                <div style="font-weight:600;font-size:0.84rem;">{{ user.get('name','Admin') }}</div>
+                <div style="font-size:0.7rem;color:#e879f9;">General Manager</div>
+            </div>
+        </div>
+        <nav class="snav">
+            <div class="nsec">Command Center</div>
+            <a href="{{ url_for('admin_dashboard') }}" class="ni active"><i class="fas fa-chart-bar"></i> Admin Dashboard</a>
+            <div class="nsec">Analytics</div>
+            <a href="#analytics" class="ni"><i class="fas fa-chart-line"></i> Revenue Analytics</a>
+            <a href="#rooms" class="ni"><i class="fas fa-chart-pie"></i> Room Performance</a>
+            <div class="nsec">Hotel Management</div>
+            <a href="{{ url_for('rooms') }}" class="ni"><i class="fas fa-door-open"></i> Room Inventory</a>
+            <a href="{{ url_for('admin_users') if admin_users is defined else '#' }}" class="ni"><i class="fas fa-users"></i> User Management</a>
+            <a href="{{ url_for('admin_bookings') if admin_bookings is defined else '#' }}" class="ni"><i class="fas fa-calendar-alt"></i> Booking Admin</a>
+            <div class="nsec">Finance & Reports</div>
+            <a href="#financials" class="ni"><i class="fas fa-rupee-sign"></i> Financial Dashboard</a>
+            <a href="#coupons" class="ni"><i class="fas fa-tag"></i> Coupons & Promo</a>
+            <a href="#reviews" class="ni"><i class="fas fa-star"></i> Review Moderation</a>
+            <div class="nsec">Administration</div>
+            <a href="{{ url_for('manager_dashboard') }}" class="ni"><i class="fas fa-users-cog"></i> Manager Panel</a>
+            <a href="#settings" class="ni"><i class="fas fa-cog"></i> Hotel Settings</a>
+            <a href="{{ url_for('super_admin_dashboard') }}" class="ni"><i class="fas fa-crown"></i> Super Admin</a>
+        </nav>
+        <div class="sbottom">
+            <a href="{{ url_for('logout') }}" class="ni" style="color:#f87171;border:none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1>🟠 Admin Dashboard — Hotel Control Center</h1>
+                <p style="color:var(--muted);font-size:0.77rem;margin-top:2px;">Blissful Abodes Chennai · {{ now.strftime('%A, %d %B %Y · %H:%M') }} IST</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="tbadge">🟠 ADMIN — LEVEL 4</span>
+                {% if alerts|length > 0 %}
+                <span style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);padding:4px 12px;border-radius:20px;font-size:0.71rem;font-weight:600;">🔴 {{ alerts|default([])|length }} Alerts</span>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="btn-tb btn-out"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-3" role="alert">
+                {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}{% endif %}{% endwith %}
+
+            <!-- EXECUTIVE SUMMARY BANNER -->
+            <div class="card2" style="background:linear-gradient(135deg,var(--card) 0%,rgba(232,121,249,0.05) 100%);border-left:4px solid #e879f9;margin-bottom:16px;">
+                <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;">
+                    <div>
+                        <div style="font-size:0.74rem;color:#e879f9;font-weight:600;text-transform:uppercase;letter-spacing:2px;">GENERAL MANAGER</div>
+                        <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;">{{ user.get('name','Admin') }}</div>
+                        <div style="font-size:0.82rem;color:var(--muted);margin-top:2px;">
+                            <i class="fas fa-hotel me-1" style="color:var(--gold);"></i>Blissful Abodes Chennai
+                            &nbsp;·&nbsp; <i class="fas fa-star me-1" style="color:var(--gold);"></i>5★ Luxury Hotel
+                            &nbsp;·&nbsp; <i class="fas fa-map-marker-alt me-1" style="color:var(--gold);"></i>Marina Beach Road
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                        <div style="text-align:center;padding:10px 18px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;">
+                            <div style="font-size:1.4rem;font-weight:700;color:#4ade80;">{{ occupancy_rate }}%</div>
+                            <div style="font-size:0.7rem;color:var(--muted);">Occupancy</div>
+                        </div>
+                        <div style="text-align:center;padding:10px 18px;background:rgba(212,175,55,0.08);border:1px solid var(--bdr);border-radius:10px;">
+                            <div style="font-size:1.4rem;font-weight:700;color:var(--gold);">₹{{ "{:,.0f}".format(monthly_revenue) }}</div>
+                            <div style="font-size:0.7rem;color:var(--muted);">MTD Revenue</div>
+                        </div>
+                        <div style="text-align:center;padding:10px 18px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:10px;">
+                            <div style="font-size:1.4rem;font-weight:700;color:#a78bfa;">{{ avg_rating }}/5</div>
+                            <div style="font-size:0.7rem;color:var(--muted);">Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8 KPI CARDS -->
+            <div class="kpi-grid8">
+                <div class="kc kc1">
+                    <div style="font-size:1rem;">💰</div>
+                    <div class="kv">₹{{ "{:,.0f}".format(monthly_revenue) }}</div>
+                    <div class="kl">Monthly Revenue</div>
+                    <div class="ks" style="color:#4ade80;">This month</div>
+                </div>
+                <div class="kc kc2">
+                    <div style="font-size:1rem;">🎯</div>
+                    <div class="kv">{{ revenue_target_pct }}%</div>
+                    <div class="kl">Target Achieved</div>
+                    <div class="ks" style="color:var(--gold);">of ₹{{ "{:,.0f}".format(revenue_target) }}</div>
+                </div>
+                <div class="kc kc3">
+                    <div style="font-size:1rem;">🏨</div>
+                    <div class="kv">{{ occupancy_rate }}%</div>
+                    <div class="kl">Occupancy Rate</div>
+                    <div class="ks" style="color:#60a5fa;">{{ occupied_rooms }}/{{ total_rooms }} rooms</div>
+                </div>
+                <div class="kc kc4">
+                    <div style="font-size:1rem;">📊</div>
+                    <div class="kv">₹{{ "{:,.0f}".format(adr) }}</div>
+                    <div class="kl">ADR</div>
+                    <div class="ks" style="color:#a78bfa;">Avg Daily Rate</div>
+                </div>
+                <div class="kc kc5">
+                    <div style="font-size:1rem;">📈</div>
+                    <div class="kv">₹{{ "{:,.0f}".format(revpar) }}</div>
+                    <div class="kl">RevPAR</div>
+                    <div class="ks" style="color:#f472b6;">Rev/Available Room</div>
+                </div>
+                <div class="kc kc6">
+                    <div style="font-size:1rem;">⭐</div>
+                    <div class="kv">{{ avg_rating }}/5</div>
+                    <div class="kl">Satisfaction</div>
+                    <div class="ks" style="color:#fbbf24;">{{ all_reviews|default([])|length }} reviews</div>
+                </div>
+                <div class="kc kc7">
+                    <div style="font-size:1rem;">👥</div>
+                    <div class="kv">{{ total_users }}</div>
+                    <div class="kl">Total Users</div>
+                    <div class="ks" style="color:#67e8f9;">All roles</div>
+                </div>
+                <div class="kc kc8">
+                    <div style="font-size:1rem;">💎</div>
+                    <div class="kv">{{ profit_margin }}%</div>
+                    <div class="kl">Net Margin</div>
+                    <div class="ks" style="color:#f87171;">After all expenses</div>
+                </div>
+            </div>
+
+            <!-- REVENUE ANALYTICS CHART + ROOM PERFORMANCE -->
+            <div class="g3" id="analytics">
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-chart-area"></i> Revenue Analytics — 12 Month Trend
+                        <select style="margin-left:auto;background:var(--card2);border:1px solid var(--bdr);border-radius:6px;padding:4px 10px;color:var(--txt);font-size:0.75rem;">
+                            <option>2025-26</option><option>2024-25</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-chart-pie"></i> Revenue Split</div>
+                    <div class="chart-wrap" style="height:170px;">
+                        <canvas id="splitChart"></canvas>
+                    </div>
+                    <div style="margin-top:10px;">
+                        {% for label, pct, color in [('Rooms','72%','#d4af37'),('F&B','15%','#3b82f6'),('Events','8%','#22c55e'),('Spa','5%','#8b5cf6')] %}
+                        <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;">
+                            <span style="color:var(--muted);"><span style="display:inline-block;width:10px;height:10px;background:{{ color }};border-radius:2px;margin-right:6px;"></span>{{ label }}</span>
+                            <span style="font-weight:600;color:{{ color }};">{{ pct }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-bullseye"></i> Revenue Targets</div>
+                    {% for goal, pct, color in [('Monthly Target',revenue_target_pct,'#22c55e'),('Occupancy (75%)',occupancy_rate,'#d4af37'),('Satisfaction (5★)',(avg_rating/5*100)|int,'#f472b6'),('Staff KPI',88,'#60a5fa'),('Cost Control',76,'#f87171')] %}
+                    <div style="margin-bottom:10px;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;">
+                            <span style="color:var(--muted);">{{ goal }}</span>
+                            {% set safe_pct = pct %}
+                            {% if safe_pct > 100 %}{% set safe_pct = 100 %}{% endif %}
+                            <span style="font-weight:700;color:{{ color }};">{{ safe_pct }}%</span>
+                        </div>
+                        <div class="prog-wrap">
+                            <div class="prog-fill" style="width:{{ safe_pct }}%;background:{{ color }};"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ROOM PERFORMANCE TABLE -->
+            <div class="card2" id="rooms">
+                <div class="stit"><i class="fas fa-door-open"></i> Room Performance by Type</div>
+                <table class="ltable">
+                    <thead><tr><th>Room Type</th><th>Total Rooms</th><th>Occupied</th><th>Occupancy %</th><th>Price/Night</th><th>Revenue MTD</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for rtype, count, occ, price, rev_mult in [
+                          ('Single (S100–S124)',25,18,'₹2,500',0.035),
+                          ('Double (D125–D149)',25,20,'₹4,000',0.06),
+                          ('Family (F150–F174)',25,16,'₹6,500',0.075),
+                          ('Couple (C175–C189)',15,12,'₹5,500',0.055),
+                          ('VIP Suite (V190–V199)',10,7,'₹15,000',0.12)
+                        ] %}
+                        {% set occ_pct = (occ/count*100)|round|int %}
+                        <tr>
+                            <td style="font-weight:600;">{{ rtype }}</td>
+                            <td>{{ count }}</td>
+                            <td>{{ occ }}</td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <span style="font-weight:700;color:{{ '#4ade80' if occ_pct >= 70 else ('#fbbf24' if occ_pct >= 50 else '#f87171') }};">{{ occ_pct }}%</span>
+                                    <div style="flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;min-width:50px;">
+                                        <div style="width:{{ occ_pct }}%;height:100%;background:{{ '#22c55e' if occ_pct >= 70 else ('#f59e0b' if occ_pct >= 50 else '#ef4444') }};border-radius:3px;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ price }}</td>
+                            <td style="font-weight:600;color:var(--gold);">₹{{ "{:,.0f}".format(monthly_revenue * rev_mult) }}</td>
+                            <td><span class="bl {{ 'bs' if occ_pct >= 70 else ('bw' if occ_pct >= 50 else 'bd') }}">{{ 'High' if occ_pct >= 70 else ('Medium' if occ_pct >= 50 else 'Low') }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- USER MANAGEMENT + BOOKING ADMIN -->
+            <div class="g2">
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-users-cog"></i> User Management
+                        <a href="{{ url_for('admin_users') if admin_users is defined else '#' }}" class="btn-tb btn-g" style="margin-left:auto;font-size:0.73rem;padding:5px 10px;"><i class="fas fa-user-plus me-1"></i>Add User</a>
+                    </div>
+                    <table class="ltable">
+                        <thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            {% for u in all_users[:5] %}
+                            <tr>
+                                <td style="font-weight:600;">{{ u.get('name','User') }}</td>
+                                <td>
+                                    <span class="bl {{ 'bs' if u.get('role')=='guest' else ('bw' if u.get('role')=='staff' else ('bi' if u.get('role')=='manager' else ('bp' if u.get('role')=='admin' else 'bd'))) }}">
+                                        {{ u.get('role','guest')|upper }}
+                                    </span>
+                                </td>
+                                <td style="font-size:0.78rem;color:var(--muted);">{{ u.get('email','—')[:24] }}</td>
+                                <td><span class="bl bs">Active</span></td>
+                                <td class="d-flex gap-1">
+                                    <a href="{{ url_for('admin_user_detail', user_id=u.get('user_id','')) if u.get('user_id') else '#' }}" class="bl bi" style="text-decoration:none;cursor:pointer;">Edit</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            {% for name, role, email in [
+                              ('Rajesh Kumar','guest','rajesh@email.com'),
+                              ('Priya Sharma','staff','priya@blissful.com'),
+                              ('Suresh Menon','manager','suresh@blissful.com'),
+                              ('Anita Desai','admin','anita@blissful.com'),
+                              ('Dr. Vikram','superadmin','vikram@blissful.com')
+                            ] %}
+                            <tr>
+                                <td style="font-weight:600;">{{ name }}</td>
+                                <td><span class="bl {{ 'bs' if role=='guest' else ('bw' if role=='staff' else ('bi' if role=='manager' else ('bp' if role=='admin' else 'bd'))) }}">{{ role|upper }}</span></td>
+                                <td style="font-size:0.78rem;color:var(--muted);">{{ email }}</td>
+                                <td><span class="bl bs">Active</span></td>
+                                <td><button class="bl bi" onclick="alert('Opening user editor...')" style="cursor:pointer;border:none;">Edit</button></td>
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="margin-top:10px;"><a href="{{ url_for('admin_users') if admin_users is defined else '#' }}" class="btn-tb btn-out" style="font-size:0.76rem;padding:5px 12px;">View All {{ total_users }} Users</a></div>
+                </div>
+
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-calendar-alt"></i> Booking Administration
+                        <a href="{{ url_for('admin_bookings') if admin_bookings is defined else '#' }}" class="btn-tb btn-g" style="margin-left:auto;font-size:0.73rem;padding:5px 10px;">View All</a>
+                    </div>
+                    <table class="ltable">
+                        <thead><tr><th>Guest</th><th>Room</th><th>Amount</th><th>Status</th></tr></thead>
+                        <tbody>
+                            {% for booking in all_bookings[:6] %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight:600;font-size:0.84rem;">{{ booking.get('user_name','Guest') }}</div>
+                                    <div style="font-size:0.7rem;color:var(--muted);">{{ booking.get('check_in','—')[:10] if booking.get('check_in') else '—' }} → {{ booking.get('check_out','—')[:10] if booking.get('check_out') else '—' }}</div>
+                                </td>
+                                <td>{{ booking.get('room_number',booking.get('room_id','—')) }}</td>
+                                <td style="font-weight:600;color:var(--gold);">₹{{ "{:,.0f}".format(booking.get('total_price',0)|float) }}</td>
+                                <td><span class="bl {{ 'bs' if booking.get('status')=='confirmed' else ('bw' if booking.get('status')=='pending' else ('bi' if booking.get('status')=='completed' else 'bd')) }}">{{ booking.get('status','pending')|upper }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px;">No bookings yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FINANCIAL DASHBOARD -->
+            <div class="card2" id="financials">
+                <div class="stit"><i class="fas fa-rupee-sign"></i> Financial Dashboard — P&L Overview
+                    <div style="margin-left:auto;display:flex;gap:8px;">
+                        <button class="btn-tb btn-g" onclick="alert('Report downloaded!')" style="font-size:0.73rem;padding:5px 10px;"><i class="fas fa-download me-1"></i>Export</button>
+                        <button class="btn-tb btn-out" onclick="alert('Email sent!')" style="font-size:0.73rem;padding:5px 10px;"><i class="fas fa-envelope me-1"></i>Email</button>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+                    {% for icon, label, value, value_color, note in [
+                      ('📈','Gross Revenue','₹' ~ "{:,.0f}".format(monthly_revenue),'#4ade80','This month'),
+                      ('🏷️','Operating Cost','₹' ~ "{:,.0f}".format(monthly_revenue * 0.6),'#f87171','60% of gross'),
+                      ('💹','EBITDA','₹' ~ "{:,.0f}".format(monthly_revenue * 0.28),'#fbbf24','28% margin'),
+                      ('💎','Net Profit','₹' ~ "{:,.0f}".format(monthly_revenue * profit_margin/100),'#d4af37',profit_margin|string ~ '% margin')
+                    ] %}
+                    <div style="padding:16px;background:var(--card2);border-radius:11px;border:1px solid var(--bdr);">
+                        <div style="font-size:1.1rem;margin-bottom:8px;">{{ icon }}</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:{{ value_color }};">{{ value }}</div>
+                        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px;">{{ label }}</div>
+                        <div style="font-size:0.68rem;margin-top:2px;color:{{ value_color }};opacity:0.7;">{{ note }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div style="margin-top:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+                    {% for label, val in [
+                      ('Room Revenue','₹' ~ "{:,.0f}".format(monthly_revenue * 0.72)),
+                      ('F&B Revenue','₹' ~ "{:,.0f}".format(monthly_revenue * 0.15)),
+                      ('Staff Costs','₹' ~ "{:,.0f}".format(monthly_revenue * 0.25)),
+                      ('Utilities','₹' ~ "{:,.0f}".format(monthly_revenue * 0.1)),
+                      ('GST Payable','₹' ~ "{:,.0f}".format(monthly_revenue * 0.18))
+                    ] %}
+                    <div style="text-align:center;padding:10px;background:var(--dark);border-radius:8px;border:1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size:0.85rem;font-weight:700;">{{ val }}</div>
+                        <div style="font-size:0.67rem;color:var(--muted);margin-top:2px;">{{ label }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- COUPONS + REVIEW MODERATION -->
+            <div class="g2">
+                <!-- COUPONS -->
+                <div class="card2" style="margin-bottom:0;" id="coupons">
+                    <div class="stit"><i class="fas fa-tag"></i> Coupons & Promotions
+                        <button class="btn-tb btn-g" style="margin-left:auto;font-size:0.73rem;padding:5px 10px;" onclick="alert('Coupon creator opened!')"><i class="fas fa-plus me-1"></i>Create</button>
+                    </div>
+                    {% for code, desc, discount, used, active in [
+                      ('WELCOME10','New user welcome offer','10% OFF',23,True),
+                      ('WEEKEND15','Weekend special booking','15% OFF',47,True),
+                      ('VIP25','VIP suite discount','25% OFF',8,True),
+                      ('MONSOON20','Monsoon special offer','20% OFF',15,False),
+                      ('DIWALI30','Festival celebration','30% OFF',61,False)
+                    ] %}
+                    <div class="coupon-card">
+                        <div>
+                            <div class="coupon-code">{{ code }}</div>
+                            <div class="coupon-detail">{{ desc }} · Used: {{ used }} times</div>
+                        </div>
+                        <div class="coupon-badge">
+                            <div style="font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:3px;">{{ discount }}</div>
+                            <span class="bl {{ 'bs' if active else 'bd' }}">{{ 'Active' if active else 'Expired' }}</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            <button class="bl bi" style="cursor:pointer;border:none;" onclick="alert('Editing coupon...')">Edit</button>
+                            <button class="bl bd" style="cursor:pointer;border:none;" onclick="alert('Coupon deleted!')">Del</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- REVIEW MODERATION -->
+                <div class="card2" style="margin-bottom:0;" id="reviews">
+                    <div class="stit"><i class="fas fa-star"></i> Review Moderation
+                        <span style="margin-left:auto;font-size:0.8rem;color:var(--gold);font-weight:700;">{{ avg_rating }}/5 avg</span>
+                    </div>
+                    <!-- Star distribution bars -->
+                    <div style="margin-bottom:16px;">
+                        {% for stars, count in [(5,42),(4,18),(3,8),(2,3),(1,1)] %}
+                        <div class="star-bar-wrap">
+                            <span class="star-label">{{ stars }}★</span>
+                            <div class="star-bar-bg">
+                                <div class="star-bar-fill" style="width:{{ (count / 72 * 100)|int }}%;"></div>
+                            </div>
+                            <span class="star-count">{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if all_reviews %}
+                    {% for review in all_reviews[:3] %}
+                    <div style="padding:10px 12px;background:var(--card2);border-radius:8px;margin-bottom:7px;border:1px solid var(--bdr);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                            <span style="color:var(--gold);font-size:0.82rem;">{% for i in range(review.get('rating',5)|int) %}★{% endfor %}{% for i in range(5-review.get('rating',5)|int) %}☆{% endfor %}</span>
+                            <div class="d-flex gap-1">
+                                {% if not review.get('response') %}<button class="bl bi" style="cursor:pointer;border:none;font-size:0.67rem;" onclick="alert('Reply sent!')">Reply</button>{% endif %}
+                                <button class="bl bd" style="cursor:pointer;border:none;font-size:0.67rem;" onclick="alert('Review removed!')">Hide</button>
+                            </div>
+                        </div>
+                        <div style="font-size:0.81rem;font-style:italic;">"{{ review.get('comment','Great stay!')[:80] }}"</div>
+                        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px;">{{ review.get('user_name','Guest') }} · {{ review.get('room_id','—') }}</div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    {% for stars, text, name in [(5,'Perfect stay! Excellent service.','Rajesh K.'),(4,'Good experience, clean rooms.','Anita D.'),(3,'Average service, slow room delivery.','Vikram S.')] %}
+                    <div style="padding:10px 12px;background:var(--card2);border-radius:8px;margin-bottom:7px;border:1px solid var(--bdr);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                            <span style="color:var(--gold);font-size:0.82rem;">{% for i in range(stars) %}★{% endfor %}{% for i in range(5-stars) %}☆{% endfor %}</span>
+                            <div class="d-flex gap-1">
+                                {% if stars < 4 %}<button class="bl bi" style="cursor:pointer;border:none;font-size:0.67rem;" onclick="alert('Reply sent!')">Reply</button>{% endif %}
+                                <button class="bl bd" style="cursor:pointer;border:none;font-size:0.67rem;" onclick="alert('Review hidden!')">Hide</button>
+                            </div>
+                        </div>
+                        <div style="font-size:0.81rem;font-style:italic;">"{{ text }}"</div>
+                        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px;">{{ name }}</div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    <div style="margin-top:8px;display:flex;gap:8px;">
+                        <button class="btn-tb btn-g" style="font-size:0.73rem;padding:5px 10px;" onclick="alert('Report exported!')"><i class="fas fa-download me-1"></i>Export Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALERTS + SETTINGS -->
+            <div class="g2">
+                <!-- CRITICAL ALERTS -->
+                <div class="card2" style="margin-bottom:0;">
+                    <div class="stit"><i class="fas fa-bell"></i> Alerts & Notifications</div>
+                    {% for icon, title, msg, bdr_class, icon_bg in [
+                      ('🔴','Low Inventory','Towels below reorder level (45 units). Place order immediately.','red-bdr','rgba(239,68,68,0.12)'),
+                      ('🟡','High Demand','10 rooms remaining for this weekend. Consider price increase.','yellow-bdr','rgba(245,158,11,0.12)'),
+                      ('🔵','New Review','3 star review received for Room D132. Response needed.','blue-bdr','rgba(59,130,246,0.12)')
+                    ] %}
+                    <div class="alert-item {{ bdr_class }}">
+                        <div class="alert-icon" style="background:{{ icon_bg }};font-size:1.1rem;">{{ icon }}</div>
+                        <div>
+                            <div style="font-weight:600;font-size:0.84rem;">{{ title }}</div>
+                            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">{{ msg }}</div>
+                        </div>
+                        <button class="bl bi" style="margin-left:auto;cursor:pointer;border:none;flex-shrink:0;" onclick="this.closest('.alert-item').style.opacity='0.4'">Dismiss</button>
+                    </div>
+                    {% endfor %}
+                    {% for alert in alerts[:2] %}
+                    <div class="alert-item red-bdr">
+                        <div class="alert-icon" style="background:rgba(239,68,68,0.12);font-size:1.1rem;">⚠️</div>
+                        <div>
+                            <div style="font-weight:600;font-size:0.84rem;">{{ alert.get('title','Alert') }}</div>
+                            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">{{ alert.get('message','Action required') }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- HOTEL SETTINGS -->
+                <div class="card2" style="margin-bottom:0;" id="settings">
+                    <div class="stit"><i class="fas fa-cog"></i> Hotel Configuration</div>
+                    <div class="stab">
+                        <button class="stab-btn active" onclick="showTab('general')">General</button>
+                        <button class="stab-btn" onclick="showTab('rates')">Room Rates</button>
+                        <button class="stab-btn" onclick="showTab('policy')">Policies</button>
+                    </div>
+                    <div id="tab-general">
+                        <div class="form-row">
+                            <div>
+                                <label class="lbl">Hotel Name</label>
+                                <input class="input-lux" value="Blissful Abodes Chennai">
+                            </div>
+                            <div>
+                                <label class="lbl">Check-in Time</label>
+                                <input class="input-lux" value="14:00">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div>
+                                <label class="lbl">Check-out Time</label>
+                                <input class="input-lux" value="12:00">
+                            </div>
+                            <div>
+                                <label class="lbl">Max Rooms/Booking</label>
+                                <input class="input-lux" value="5">
+                            </div>
+                        </div>
+                        <div style="margin-top:4px;">
+                            <label class="lbl">Address</label>
+                            <input class="input-lux" value="123 Marina Beach Road, Chennai 600001">
+                        </div>
+                    </div>
+                    <div style="margin-top:12px;">
+                        <button class="btn-tb btn-g" onclick="alert('Settings saved!')" style="font-size:0.76rem;"><i class="fas fa-save me-1"></i>Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Revenue trend chart
+        const rCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(rCtx, {
+            type: 'line',
+            data: {
+                labels: ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: [420000,390000,480000,520000,610000,590000,640000,700000,750000,820000,{{ monthly_revenue }},0],
+                    borderColor: '#d4af37',
+                    backgroundColor: 'rgba(212,175,55,0.08)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#d4af37',
+                    pointRadius: 4,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(230,237,243,0.5)', font: { size: 10 } } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(230,237,243,0.5)', font: { size: 10 }, callback: v => '₹' + (v/1000).toFixed(0) + 'K' } }
+                }
+            }
+        });
+
+        // Revenue split doughnut
+        const sCtx = document.getElementById('splitChart').getContext('2d');
+        new Chart(sCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Rooms','F&B','Events','Spa'],
+                datasets: [{ data: [72,15,8,5], backgroundColor: ['#d4af37','#3b82f6','#22c55e','#8b5cf6'], borderWidth: 0 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '65%' }
+        });
+
+        function showTab(tab) {
+            document.querySelectorAll('.stab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Room Recommendations — Blissful Abodes Chennai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
+    <style>
+      :root {
+        --gold: #d4af37;
+        --dark-bg: #0d1117;
+        --card-bg: #161b22;
+        --card-bg2: #1e2530;
+        --border: rgba(212,175,55,0.2);
+        --purple: #8b5cf6;
+        --purple-light: #a78bfa;
+        --text: #e6edf3;
+        --text-muted: rgba(230,237,243,0.45);
+        --green: #22c55e;
+      }
+      * { margin:0; padding:0; box-sizing:border-box; }
+      body { background:var(--dark-bg); color:var(--text); font-family:"Inter",sans-serif; }
+
+      /* NAV */
+      .topnav {
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 28px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: sticky; top:0; z-index:100;
+      }
+      .brand-name { font-family:"Playfair Display",serif; font-size:1.2rem; font-weight:700; color:var(--gold); }
+      .nav-link { color:var(--text-muted); text-decoration:none; font-size:0.85rem; padding:6px 12px; border-radius:6px; transition:color .2s,background .2s; }
+      .nav-link:hover { color:var(--text); background:rgba(255,255,255,0.06); }
+
+      /* HERO */
+      .hero {
+        background: linear-gradient(135deg, #1a1040 0%, #0d1117 60%);
+        border-bottom: 1px solid rgba(139,92,246,0.2);
+        padding: 48px 28px 36px;
+        text-align: center;
+      }
+      .hero-icon {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: linear-gradient(135deg,#7c3aed,#a855f7);
+        display: inline-flex; align-items:center; justify-content:center;
+        font-size:1.6rem; margin-bottom: 16px;
+        box-shadow: 0 0 40px rgba(139,92,246,0.4);
+      }
+      .hero h1 { font-family:"Playfair Display",serif; font-size:2rem; font-weight:700; color:#e9d5ff; }
+      .hero-sub { color:var(--text-muted); font-size:0.9rem; margin-top:8px; }
+
+      /* MODEL STATS BAR */
+      .model-bar {
+        background: rgba(139,92,246,0.08);
+        border-top: 1px solid rgba(139,92,246,0.15);
+        border-bottom: 1px solid rgba(139,92,246,0.15);
+        padding: 14px 28px;
+        display: flex; gap:28px; flex-wrap:wrap; align-items:center; justify-content:center;
+      }
+      .model-stat { text-align:center; }
+      .model-stat-value { font-size:1.4rem; font-weight:700; color:var(--purple-light); }
+      .model-stat-label { font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.8px; margin-top:2px; }
+      .model-chip {
+        font-size:0.72rem; padding:4px 12px; border-radius:20px;
+        background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3);
+        color:var(--purple-light); font-weight:600;
+      }
+
+      /* BREAKDOWN */
+      .weight-bar { display:flex; gap:4px; height:6px; border-radius:3px; overflow:hidden; margin-top:4px; }
+      .wb-cf  { background:#7c3aed; }
+      .wb-cb  { background:#a855f7; }
+      .wb-ctx { background:#c084fc; }
+
+      /* MAIN */
+      main { max-width:1200px; margin:0 auto; padding:32px 24px 60px; }
+
+      /* FILTERS */
+      .filter-bar {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 28px;
+        display: flex; gap:12px; flex-wrap:wrap; align-items:center;
+      }
+      .filter-bar label { font-size:0.78rem; color:var(--text-muted); margin-bottom:4px; display:block; }
+      .filter-select {
+        background: var(--card-bg2); border:1px solid rgba(255,255,255,0.1);
+        color:var(--text); padding:6px 12px; border-radius:8px; font-size:0.82rem;
+      }
+      .filter-btn {
+        background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.35);
+        color:var(--purple-light); padding:8px 18px; border-radius:8px;
+        font-size:0.82rem; font-weight:600; cursor:pointer;
+        transition:background .2s, color .2s;
+      }
+      .filter-btn:hover { background:#7c3aed; color:#fff; }
+
+      /* CARDS GRID */
+      .rec-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .rec-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(139,92,246,0.2);
+        border-radius: 14px; overflow:hidden;
+        transition: transform .2s, border-color .2s, box-shadow .2s;
+        display:flex; flex-direction:column;
+      }
+      .rec-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(167,139,250,0.5);
+        box-shadow: 0 8px 32px rgba(139,92,246,0.18);
+      }
+      .rec-img { width:100%; height:180px; object-fit:cover; background:var(--card-bg2); }
+      .rec-body { padding:18px; flex:1; display:flex; flex-direction:column; gap:10px; }
+
+      .match-badge {
+        display:inline-flex; align-items:center; gap:5px;
+        font-size:0.72rem; font-weight:700;
+        padding:3px 10px; border-radius:20px;
+        background:linear-gradient(90deg,#7c3aed,#a855f7);
+        color:#fff; letter-spacing:.4px;
+      }
+      .type-chip {
+        font-size:0.65rem; text-transform:uppercase; letter-spacing:.8px;
+        padding:3px 8px; border-radius:4px;
+        background:rgba(255,255,255,0.06); color:var(--text-muted);
+      }
+      .rec-name { font-size:1.0rem; font-weight:600; color:var(--text); line-height:1.35; }
+      .rec-price { font-size:1.2rem; font-weight:700; color:var(--gold); }
+      .rec-meta  { font-size:0.74rem; color:var(--text-muted); }
+
+      .reason-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:3px; }
+      .reason-list li { font-size:0.74rem; color:var(--text-muted); }
+      .reason-list li::before { content:"✦ "; color:var(--purple-light); font-size:0.6rem; }
+
+      .score-bar { height:5px; border-radius:3px; background:rgba(139,92,246,0.12); }
+      .score-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#7c3aed,#a855f7); transition:width .9s ease; }
+
+      .component-scores {
+        display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;
+      }
+      .comp-chip {
+        font-size:0.62rem; padding:2px 7px; border-radius:4px;
+        background:rgba(139,92,246,0.1); color:var(--purple-light);
+        border:1px solid rgba(139,92,246,0.2);
+      }
+
+      .book-btn {
+        display:block; text-align:center; padding:11px;
+        background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4);
+        color:var(--purple-light); border-radius:10px;
+        font-size:0.85rem; font-weight:600; text-decoration:none;
+        transition:background .2s, color .2s; margin-top:auto;
+      }
+      .book-btn:hover { background:#7c3aed; color:#fff; }
+
+      /* CONFIDENCE METER */
+      .conf-ring {
+        width:48px; height:48px; position:relative; flex-shrink:0;
+      }
+      .conf-ring svg { transform:rotate(-90deg); }
+      .conf-ring .bg { fill:none; stroke:rgba(139,92,246,0.15); stroke-width:4; }
+      .conf-ring .fg { fill:none; stroke:url(#grad); stroke-width:4; stroke-linecap:round;
+                       stroke-dasharray:126; stroke-dashoffset:0; transition:stroke-dashoffset .8s; }
+      .conf-value { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+                    font-size:0.62rem; font-weight:700; color:var(--purple-light); }
+
+      /* EMPTY STATE */
+      .empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
+      .empty-state i { font-size:3rem; color:rgba(139,92,246,0.3); display:block; margin-bottom:16px; }
+
+      @keyframes spin { to { transform:rotate(360deg); } }
+      .spinner {
+        width:40px; height:40px; border:3px solid rgba(139,92,246,0.2);
+        border-top-color:var(--purple-light); border-radius:50%;
+        animation:spin .9s linear infinite;
+        margin:60px auto;
+      }
+      .amenity-tag {
+        display:inline-block; font-size:0.62rem; padding:2px 7px; border-radius:4px;
+        background:rgba(255,255,255,0.05); color:var(--text-muted); margin:2px 2px 0 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAV -->
+    <nav class="topnav">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.3rem;">🏨</span>
+        <div>
+          <span class="brand-name">Blissful Abodes</span>
+          <span style="font-size:0.65rem;color:var(--text-muted);display:block;">Chennai · Marina Beach</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;align-items:center;">
+        <a href="{{ url_for('rooms') }}" class="nav-link"><i class="fas fa-door-open me-1"></i>Browse Rooms</a>
+        <a href="{{ url_for('guest_dashboard') }}" class="nav-link"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+        <a href="{{ url_for('my_bookings') }}" class="nav-link"><i class="fas fa-calendar me-1"></i>My Bookings</a>
+        <a href="{{ url_for('chatbot') }}" class="nav-link"><i class="fas fa-comments me-1"></i>AI Concierge</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">
+          {{ user.get('name','G')[0].upper() }}
+        </div>
+        <span style="font-size:0.82rem;color:var(--text-muted);">{{ user.get('name','Guest') }}</span>
+        <a href="{{ url_for('logout') }}" style="color:var(--text-muted);font-size:0.82rem;text-decoration:none;margin-left:4px;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-icon"><i class="fas fa-robot"></i></div>
+      <h1>Your AI Room Picks</h1>
+      <p class="hero-sub">
+        Personalised recommendations powered by Hybrid ML · Trained on booking patterns, amenity preferences &amp; loyalty tier
+      </p>
+      <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <span class="model-chip"><i class="fas fa-check-circle me-1" style="color:#22c55e;"></i>78% Accuracy</span>
+        <span class="model-chip"><i class="fas fa-brain me-1"></i>Hybrid CF + Content-Based</span>
+        <span class="model-chip"><i class="fas fa-crown me-1" style="color:var(--gold);"></i>{{ loyalty_tier }} Member</span>
+      </div>
+    </div>
+
+    <!-- MODEL STATS BAR -->
+    {% if model %}
+    <div class="model-bar">
+      <div class="model-stat">
+        <div class="model-stat-value">78%</div>
+        <div class="model-stat-label">Top-3 Hit Rate</div>
+      </div>
+      <div class="model-stat">
+        <div class="model-stat-value">3</div>
+        <div class="model-stat-label">Signal Sources</div>
+      </div>
+      <div class="model-stat">
+        <div class="model-stat-value">v2.1</div>
+        <div class="model-stat-label">Model Version</div>
+      </div>
+      <div class="model-stat">
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;">Weight Distribution</div>
+        <div style="display:flex;gap:12px;font-size:0.7rem;color:var(--text-muted);">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#7c3aed;margin-right:4px;"></span>CF 40%</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#a855f7;margin-right:4px;"></span>Content 35%</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c084fc;margin-right:4px;"></span>Context 25%</span>
+        </div>
+        <div class="weight-bar" style="width:180px;">
+          <div class="wb-cf"  style="flex:40"></div>
+          <div class="wb-cb"  style="flex:35"></div>
+          <div class="wb-ctx" style="flex:25"></div>
+        </div>
+      </div>
+      <div class="model-stat">
+        <div class="model-stat-value" style="font-size:1rem;">Real-time</div>
+        <div class="model-stat-label">Last updated</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <main>
+
+      <!-- FILTERS -->
+      <div class="filter-bar">
+        <div>
+          <label>Stay Length</label>
+          <select class="filter-select" id="filter-nights" onchange="reloadRecs()">
+            <option value="1">1 night</option>
+            <option value="2" selected>2 nights</option>
+            <option value="3">3 nights</option>
+            <option value="5">5+ nights</option>
+          </select>
+        </div>
+        <div>
+          <label>Results</label>
+          <select class="filter-select" id="filter-topn" onchange="reloadRecs()">
+            <option value="3">Top 3</option>
+            <option value="6" selected>Top 6</option>
+            <option value="10">Top 10</option>
+          </select>
+        </div>
+        <div style="margin-left:auto;align-self:flex-end;">
+          <button class="filter-btn" onclick="reloadRecs()">
+            <i class="fas fa-sync-alt me-1"></i>Refresh Picks
+          </button>
+        </div>
+      </div>
+
+      <!-- SVG gradient def (hidden) -->
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#7c3aed"/>
+            <stop offset="100%" style="stop-color:#a855f7"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- RESULTS -->
+      <div id="reco-container">
+        {% if recommendations %}
+          <div class="rec-grid" id="reco-grid">
+            {% for rec in recommendations %}
+            {% set room = rec.room %}
+            <div class="rec-card">
+              <img class="rec-img"
+                   src="{{ room.get('image','') or url_for('placeholder_room_image') }}"
+                   alt="{{ room.get('name','') }}"
+                   onerror="this.src='/placeholder-room-image'">
+              <div class="rec-body">
+                <!-- Top row: match + type -->
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                  <span class="match-badge">
+                    <i class="fas fa-star" style="font-size:0.6rem;"></i>
+                    {{ rec.match_label }}
+                  </span>
+                  <span class="type-chip">
+                    {% if room.get('room_type') == 'vip' %}👑{% elif room.get('room_type') == 'couple' %}💑{% elif room.get('room_type') == 'family' %}👨‍👩‍👧{% else %}🛏️{% endif %}
+                    {{ room.get('room_type','').upper() }}
+                  </span>
+                </div>
+
+                <!-- Name -->
+                <div class="rec-name">{{ room.get('name','') }}</div>
+
+                <!-- Price + meta -->
+                <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+                  <span class="rec-price">₹{{ "{:,.0f}".format(room.get('price',0)|float) }}<span style="font-size:0.65rem;font-weight:400;color:var(--text-muted);">/night</span></span>
+                  <span class="rec-meta">Floor {{ room.get('floor',1) }} · {{ room.get('capacity',1) }} guest{{ 's' if room.get('capacity',1)|int > 1 else '' }}</span>
+                </div>
+
+                <!-- Confidence + score bar -->
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <!-- Confidence ring -->
+                  <div class="conf-ring">
+                    {% set conf_pct = (rec.confidence * 100)|int %}
+                    {% set dashoff = (126 * (1 - rec.confidence))|int %}
+                    <svg viewBox="0 0 42 42" width="48" height="48">
+                      <circle class="bg" cx="21" cy="21" r="17"/>
+                      <circle class="fg" cx="21" cy="21" r="17"
+                        stroke-dashoffset="{{ dashoff }}" />
+                    </svg>
+                    <div class="conf-value">{{ conf_pct }}%</div>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:4px;">Match confidence</div>
+                    <div class="score-bar">
+                      <div class="score-fill" style="width:{{ (rec.score * 100)|int }}%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Reasons -->
+                {% if rec.reasons %}
+                <ul class="reason-list">
+                  {% for reason in rec.reasons %}
+                  <li>{{ reason }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Component scores -->
+                <div class="component-scores">
+                  <span class="comp-chip">CF {{ (rec.component_scores.collaborative * 100)|int }}%</span>
+                  <span class="comp-chip">Content {{ (rec.component_scores.content * 100)|int }}%</span>
+                  <span class="comp-chip">Context {{ (rec.component_scores.contextual * 100)|int }}%</span>
+                </div>
+
+                <!-- Top amenities -->
+                {% if room.get('amenities') %}
+                <div>
+                  {% for am in room.get('amenities', [])[:4] %}
+                  <span class="amenity-tag">{{ am }}</span>
+                  {% endfor %}
+                  {% if room.get('amenities', [])|length > 4 %}
+                  <span class="amenity-tag">+{{ room.get('amenities', [])|length - 4 }} more</span>
+                  {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- CTA -->
+                <a href="{{ url_for('book_room', room_id=room.get('room_id','')) }}" class="book-btn">
+                  <i class="fas fa-bolt me-1"></i>Book This Room
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <div class="empty-state">
+            <i class="fas fa-robot"></i>
+            <div style="font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:8px;">Building Your Profile…</div>
+            <div>Complete a booking to unlock personalised recommendations.</div>
+            <a href="{{ url_for('rooms') }}" style="display:inline-block;margin-top:20px;padding:10px 24px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.35);color:var(--purple-light);border-radius:8px;font-weight:600;text-decoration:none;">Browse All Rooms</a>
+          </div>
+        {% endif %}
+      </div>
+
+    </main>
+
+    <script>
+    async function reloadRecs() {
+      const nights = document.getElementById("filter-nights").value;
+      const topn   = document.getElementById("filter-topn").value;
+      const container = document.getElementById("reco-container");
+      container.innerHTML = '<div class="spinner"></div>';
+
+      try {
+        const resp = await fetch(`/api/recommendations?top_n=${topn}&nights=${nights}`);
+        const data = await resp.json();
+        if (!data.success || !data.recommendations || data.recommendations.length === 0) {
+          container.innerHTML = '<div class="empty-state"><i class="fas fa-robot"></i><div style="color:var(--text);">No recommendations available right now.</div></div>';
+          return;
+        }
+        renderCards(data.recommendations, container);
+      } catch(e) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle" style="color:#ef4444;"></i><div>Could not load recommendations.</div></div>';
+      }
+    }
+
+    function renderCards(recs, container) {
+      const ICONS = {single:"🛏️",double:"🛏️🛏️",family:"👨‍👩‍👧",couple:"💑",vip:"👑"};
+      const cards = recs.map(rec => {
+        const r = rec;
+        const matchPct = rec.match_label;
+        const icon = ICONS[r.room_type] || "🏨";
+        const reasons = (rec.reasons||[]).map(rz=>`<li>${rz}</li>`).join("");
+        const amenities = (r.amenities||[]).slice(0,4).map(a=>`<span class="amenity-tag">${a}</span>`).join("");
+        const moreAm = (r.amenities||[]).length > 4 ? `<span class="amenity-tag">+${r.amenities.length-4} more</span>` : "";
+        const confPct = Math.round(rec.confidence*100);
+        const dashoff = Math.round(126*(1-rec.confidence));
+        const scoreW  = Math.round(rec.score*100);
+        const compCF  = Math.round(rec.component_scores.collaborative*100);
+        const compCB  = Math.round(rec.component_scores.content*100);
+        const compCtx = Math.round(rec.component_scores.contextual*100);
+        const imgSrc  = r.image || "/placeholder-room-image";
+        const price   = Number(r.price).toLocaleString("en-IN");
+        return `
+          <div class="rec-card">
+            <img class="rec-img" src="${imgSrc}" alt="${r.name}" loading="lazy" onerror="this.src='/placeholder-room-image'">
+            <div class="rec-body">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                <span class="match-badge"><i class="fas fa-star" style="font-size:.6rem;"></i> ${matchPct}</span>
+                <span class="type-chip">${icon} ${(r.room_type||"").toUpperCase()}</span>
+              </div>
+              <div class="rec-name">${r.name}</div>
+              <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+                <span class="rec-price">₹${price}<span style="font-size:.65rem;font-weight:400;color:var(--text-muted);">/night</span></span>
+                <span class="rec-meta">Floor ${r.floor} · ${r.capacity} guest${r.capacity>1?"s":""}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="conf-ring">
+                  <svg viewBox="0 0 42 42" width="48" height="48">
+                    <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#7c3aed"/><stop offset="100%" style="stop-color:#a855f7"/></linearGradient></defs>
+                    <circle class="bg" cx="21" cy="21" r="17"/>
+                    <circle class="fg" cx="21" cy="21" r="17" stroke="url(#grad2)" stroke-dashoffset="${dashoff}" style="fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:126;transition:stroke-dashoffset .8s;"/>
+                  </svg>
+                  <div class="conf-value">${confPct}%</div>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:.65rem;color:var(--text-muted);margin-bottom:4px;">Match confidence</div>
+                  <div class="score-bar"><div class="score-fill" style="width:${scoreW}%"></div></div>
+                </div>
+              </div>
+              <ul class="reason-list">${reasons}</ul>
+              <div class="component-scores">
+                <span class="comp-chip">CF ${compCF}%</span>
+                <span class="comp-chip">Content ${compCB}%</span>
+                <span class="comp-chip">Context ${compCtx}%</span>
+              </div>
+              <div>${amenities}${moreAm}</div>
+              <a href="/book/${r.room_id}" class="book-btn"><i class="fas fa-bolt me-1"></i>Book This Room</a>
+            </div>
+          </div>`;
+      });
+      container.innerHTML = `<div class="rec-grid">${cards.join("")}</div>`;
+      // Animate bars
+      requestAnimationFrame(() => {
+        document.querySelectorAll(".score-fill").forEach(el => {
+          const w = el.style.width; el.style.width="0";
+          setTimeout(()=>{ el.style.width=w; },60);
+        });
+      });
+    }
+    </script>
+  </body>
+</html>

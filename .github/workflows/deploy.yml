@@ -1,0 +1,43 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Navigate to the project directory or clone it if it doesn't exist
+            if [ -d "~/hotel-booking" ]; then
+              cd ~/hotel-booking
+              git pull origin main
+            else
+              git clone https://github.com/${{ github.repository }}.git ~/hotel-booking
+              cd ~/hotel-booking
+            fi
+
+            # Export Google API Key if provided as a secret
+            export GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+
+            # Rebuild and restart the Docker containers
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
+
+            # Clean up old images to save disk space
+            docker image prune -f

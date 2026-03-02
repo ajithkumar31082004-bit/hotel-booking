@@ -1,0 +1,3 @@
+182:         calculate_dynamic_price,
+2149:                 dynamic_price = calculate_dynamic_price(
+4223:                     new_price = calculate_dynamic_price(

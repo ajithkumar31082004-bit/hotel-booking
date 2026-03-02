@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Blissful Abodes Chennai</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f0d080;
+      --dark-bg: #0d1117;
+      --card-bg: #161b22;
+      --border: rgba(212, 175, 55, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: #e6edf3;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    .login-wrapper {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .login-hero {
+      background: linear-gradient(135deg, #0d1117 0%, #1a2332 50%, #0d1117 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    }
+
+    .hotel-logo {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+      position: relative;
+      z-index: 1;
+    }
+
+    .hotel-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 8px;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hotel-tagline {
+      color: rgba(230, 237, 243, 0.5);
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 50px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hotel-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 370px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 20px 10px;
+      background: rgba(212, 175, 55, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .stat-number {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: rgba(230, 237, 243, 0.4);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hotel-address {
+      margin-top: 40px;
+      text-align: center;
+      color: rgba(230, 237, 243, 0.35);
+      font-size: 0.82rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hotel-address i {
+      color: var(--gold);
+      margin-right: 6px;
+    }
+
+    .divider-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 20px auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-form-side {
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 55px;
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #e6edf3;
+      margin-bottom: 4px;
+    }
+
+    .form-subtitle {
+      color: rgba(230, 237, 243, 0.45);
+      font-size: 0.88rem;
+      margin-bottom: 32px;
+    }
+
+
+
+    .form-group-lux {
+      margin-bottom: 20px;
+    }
+
+    .form-group-lux label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: rgba(230, 237, 243, 0.6);
+      margin-bottom: 7px;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(230, 237, 243, 0.25);
+      font-size: 0.88rem;
+    }
+
+    .input-lux {
+      width: 100%;
+      padding: 13px 16px 13px 40px;
+      background: #0d1117;
+      border: 1px solid rgba(230, 237, 243, 0.08);
+      border-radius: 10px;
+      color: #e6edf3;
+      font-size: 0.93rem;
+      transition: all 0.3s;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .input-lux:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+
+    .input-lux::placeholder {
+      color: rgba(230, 237, 243, 0.2);
+    }
+
+    .btn-login-lux {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #b8932e 0%, #d4af37 40%, #f0d080 60%, #d4af37 100%);
+      border: none;
+      border-radius: 10px;
+      color: #0d1117;
+      font-size: 0.97rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-login-lux:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 22px;
+      color: rgba(230, 237, 243, 0.35);
+      font-size: 0.85rem;
+    }
+
+    .login-footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .alert-lux {
+      padding: 11px 15px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .alert-lux.success {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      color: #86efac;
+    }
+
+    .alert-lux.danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+
+    @media (max-width: 768px) {
+      .login-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .login-hero {
+        display: none;
+      }
+
+      .login-form-side {
+        padding: 40px 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-wrapper">
+    <!-- LEFT PANEL: Hotel Branding -->
+    <div class="login-hero">
+      <div class="hotel-logo">🏨</div>
+      <div class="hotel-name">Blissful Abodes</div>
+      <div class="hotel-tagline">Chennai's Premier Luxury Hotel</div>
+      <div class="divider-line"></div>
+      <div class="hotel-stats">
+        <div class="stat-item">
+          <span class="stat-number">100</span>
+          <div class="stat-label">Rooms</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">7</span>
+          <div class="stat-label">Floors</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5★</span>
+          <div class="stat-label">Rating</div>
+        </div>
+      </div>
+      <div class="hotel-address">
+        <i class="fas fa-map-marker-alt"></i>
+        123 Marina Beach Road, Chennai<br>Tamil Nadu — 600001 🇮🇳
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Login Form -->
+    <div class="login-form-side">
+      <h1 class="form-title">Welcome Back</h1>
+      <p class="form-subtitle">Sign in to your Blissful Abodes account</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}
+      <div class="alert-lux {{ 'success' if category == 'success' else 'danger' }}">
+        <i class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}{% endif %}
+      {% endwith %}
+
+
+
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group-lux">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" class="input-lux" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-group-lux">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" class="input-lux" placeholder="••••••••" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-login-lux">
+          <i class="fas fa-sign-in-alt me-2"></i> Sign In to Blissful Abodes
+        </button>
+      </form>
+
+      <div class="login-footer">
+        New guest? <a href="{{ url_for('register') }}">Create an account</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Empty script left for structure
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard — Blissful Abodes Chennai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold:#d4af37; --dark-bg:#0d1117; --card-bg:#161b22; --card-bg2:#1e2530; --border:rgba(212,175,55,0.2); --text:#e6edf3; --text-muted:rgba(230,237,243,0.45); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--dark-bg); color:var(--text); font-family:'Inter',sans-serif; }
+
+        .topnav { background:var(--card-bg); border-bottom:1px solid var(--border); padding:12px 26px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+        .nav-brand { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.15rem; font-weight:700; }
+        .nav-right { display:flex; align-items:center; gap:12px; }
+        .time-display { font-size:1.05rem; font-weight:700; color:var(--gold); font-family:monospace; }
+        .shift-badge { padding:5px 12px; border-radius:20px; font-size:0.76rem; font-weight:600; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#4ade80; }
+        .alert-badge { padding:5px 12px; border-radius:20px; font-size:0.76rem; font-weight:600; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#fbbf24; }
+        .btn-nav { padding:7px 14px; border-radius:7px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+        .btn-gold { background:var(--gold); color:#0d1117; }
+        .btn-danger2 { background:rgba(239,68,68,0.12); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+
+        .container-lux { max-width:1350px; margin:0 auto; padding:22px 24px; }
+
+        /* WELCOME ROW */
+        .welcome-row { background:var(--card-bg); border:1px solid var(--border); border-left:4px solid var(--gold); border-radius:12px; padding:18px 22px; margin-bottom:22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+
+        /* STATS */
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+        @media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+        .stat-card { background:var(--card-bg); border:1px solid var(--border); border-radius:13px; padding:20px 18px; position:relative; overflow:hidden; transition:all 0.3s; }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+        .sc1::before{background:linear-gradient(90deg,#22c55e,#4ade80);} .sc2::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);} .sc3::before{background:linear-gradient(90deg,#3b82f6,#60a5fa);} .sc4::before{background:linear-gradient(90deg,#d4af37,#f0d080);}
+        .stat-card:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,0,0,0.3); }
+        .stat-icon { font-size:1.2rem; margin-bottom:8px; }
+        .stat-value { font-size:1.9rem; font-weight:700; line-height:1; margin-bottom:3px; }
+        .stat-label { font-size:0.73rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+
+        /* ROOM GRID */
+        .room-grid-section { background:var(--card-bg); border:1px solid var(--border); border-radius:13px; padding:22px; margin-bottom:20px; }
+        .section-title { font-size:0.97rem; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+        .section-title i { color:var(--gold); }
+        .floor-section { margin-bottom:16px; }
+        .floor-label { font-size:0.73rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:7px; padding:5px 10px; background:rgba(255,255,255,0.04); border-radius:5px; display:inline-block; }
+        .rooms-row { display:flex; flex-wrap:wrap; gap:5px; }
+        .room-cell { width:54px; height:38px; border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; cursor:pointer; transition:all 0.2s; border:1px solid; position:relative; }
+        .room-cell:hover { transform:scale(1.15); z-index:5; }
+        .room-cell .rnum { font-size:0.68rem; }
+        .room-cell .rtype { font-size:0.52rem; opacity:0.7; }
+        .room-available { background:rgba(34,197,94,0.1); border-color:rgba(34,197,94,0.4); color:#4ade80; }
+        .room-occupied { background:rgba(239,68,68,0.1); border-color:rgba(239,68,68,0.4); color:#f87171; }
+        .room-cleaning { background:rgba(245,158,11,0.1); border-color:rgba(245,158,11,0.4); color:#fbbf24; }
+        .room-maintenance { background:rgba(139,92,246,0.1); border-color:rgba(139,92,246,0.4); color:#a78bfa; }
+        .room-vip-avail { background:rgba(212,175,55,0.1); border-color:rgba(212,175,55,0.4); color:var(--gold); }
+        .room-legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+        .legend-item { display:flex; align-items:center; gap:5px; font-size:0.76rem; color:var(--text-muted); }
+        .legend-dot { width:10px; height:10px; border-radius:2px; }
+
+        /* GRID LAYOUTS */
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+        @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+        .section-card2 { background:var(--card-bg); border:1px solid var(--border); border-radius:13px; padding:20px; }
+
+        /* TABLES */
+        .lux-table { width:100%; border-collapse:collapse; }
+        .lux-table th { padding:8px 12px; font-size:0.69rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); border-bottom:1px solid var(--border); text-align:left; }
+        .lux-table td { padding:11px 12px; font-size:0.83rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+        .lux-table tr:hover td { background:rgba(212,175,55,0.025); }
+        .badge-lux { padding:3px 9px; border-radius:5px; font-size:0.69rem; font-weight:600; }
+        .badge-success { background:rgba(34,197,94,0.15); color:#4ade80; }
+        .badge-warning { background:rgba(245,158,11,0.15); color:#fbbf24; }
+        .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
+        .badge-info { background:rgba(59,130,246,0.15); color:#60a5fa; }
+        .badge-purple { background:rgba(139,92,246,0.15); color:#a78bfa; }
+        .btn-sm-act { padding:5px 10px; border-radius:6px; font-size:0.73rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
+        .btn-checkin { background:rgba(34,197,94,0.18); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+        .btn-checkout { background:rgba(245,158,11,0.18); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
+        .btn-info { background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
+        .btn-danger-sm { background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+
+        /* SERVICE REQUESTS */
+        .req-item { padding:11px 14px; background:var(--card-bg2); border:1px solid var(--border); border-radius:8px; margin-bottom:7px; }
+        .req-title { font-size:0.83rem; font-weight:600; }
+        .req-meta { font-size:0.73rem; color:var(--text-muted); margin-top:3px; }
+        .req-actions { margin-top:8px; display:flex; gap:6px; }
+        .btn-resolve { padding:4px 10px; background:rgba(34,197,94,0.13); color:#4ade80; border:1px solid rgba(34,197,94,0.3); border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; }
+        .btn-escalate { padding:4px 10px; background:rgba(245,158,11,0.13); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); border-radius:6px; font-size:0.72rem; font-weight:600; cursor:pointer; }
+
+        /* MAINTENANCE ALERT */
+        .maint-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; background:var(--card-bg2); border:1px solid rgba(239,68,68,0.2); border-radius:9px; margin-bottom:8px; }
+        .maint-icon { width:36px; height:36px; border-radius:8px; background:rgba(239,68,68,0.12); display:flex; align-items:center; justify-content:center; color:#f87171; flex-shrink:0; }
+        .maint-title { font-size:0.85rem; font-weight:600; margin-bottom:2px; }
+        .maint-meta { font-size:0.74rem; color:var(--text-muted); }
+
+        /* MESSAGES */
+        .msg-item { padding:11px 14px; background:var(--card-bg2); border:1px solid var(--border); border-radius:8px; margin-bottom:7px; }
+        .msg-from { font-size:0.73rem; color:var(--gold); font-weight:600; margin-bottom:3px; }
+        .msg-text { font-size:0.83rem; }
+
+        /* QUICK ACTIONS */
+        .qa-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+        @media(max-width:900px){.qa-grid{grid-template-columns:repeat(3,1fr);}}
+        .qa-item { text-align:center; padding:14px 8px; background:var(--card-bg2); border:1px solid var(--border); border-radius:10px; color:var(--text); text-decoration:none; transition:all 0.2s; cursor:pointer; }
+        .qa-item:hover { border-color:var(--gold); transform:translateY(-2px); color:var(--text); }
+        .qa-icon { font-size:1.3rem; color:var(--gold); display:block; margin-bottom:6px; }
+        .qa-label { font-size:0.75rem; font-weight:600; }
+
+        /* ROOM MODAL */
+        .room-tooltip { position:absolute; bottom:105%; left:50%; transform:translateX(-50%); background:#0d1117; border:1px solid var(--gold); border-radius:8px; padding:8px 12px; font-size:0.75rem; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:10; }
+        .room-cell:hover .room-tooltip { opacity:1; }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAV -->
+    <nav class="topnav">
+        <div class="nav-brand">🏨 Blissful Abodes Chennai</div>
+        <div class="nav-right">
+            <span class="shift-badge"><i class="fas fa-circle" style="font-size:0.4rem;margin-right:4px;"></i>On Duty — {{ user.get('shift','Morning') }} Shift</span>
+            <span class="alert-badge">🔔 {{ pending_requests|length }} Alerts</span>
+            <div class="time-display" id="live-clock">--:--:--</div>
+            <a href="{{ url_for('manager_dashboard') }}" class="btn-nav btn-gold"><i class="fas fa-chart-bar me-1"></i>Manager View</a>
+            <a href="{{ url_for('logout') }}" class="btn-nav btn-danger2"><i class="fas fa-sign-out-alt me-1"></i>Clock Out</a>
+        </div>
+    </nav>
+
+    <div class="container-lux">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show mb-3" role="alert">
+            {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}{% endif %}{% endwith %}
+
+        <!-- WELCOME ROW -->
+        <div class="welcome-row">
+            <div>
+                <div style="font-size:0.75rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:3px;">
+                    Good {{ 'Morning' if now.hour < 12 else ('Afternoon' if now.hour < 17 else 'Evening') }},
+                </div>
+                <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;">{{ user.get('name','Staff Member') }}</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">
+                    {{ user.get('department','Front Desk') }} &nbsp;·&nbsp; {{ now.strftime('%A, %d %B %Y') }}
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:0.7rem;color:var(--text-muted);">Currently</div>
+                <div style="font-size:1.25rem;font-weight:700;color:var(--gold);">{{ now.strftime('%H:%M') }}</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">IST · Chennai</div>
+            </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        {% set total_rooms = rooms|length %}
+        {% set occupied_ct = rooms|selectattr('availability','in',['occupied','unavailable'])|list|length %}
+        {% set available_ct = total_rooms - occupied_ct %}
+        {% set today_str = now.strftime('%Y-%m-%d') %}
+        {% set checkins_today = bookings|selectattr('check_in','defined')|selectattr('check_in','ne',None)|list %}
+        {% set checkouts_today = bookings|selectattr('check_out','defined')|selectattr('check_out','ne',None)|list %}
+
+        <div class="stats-grid">
+            <div class="stat-card sc1">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">{{ checkins_today|length }}</div>
+                <div class="stat-label">Check-ins Today</div>
+            </div>
+            <div class="stat-card sc2">
+                <div class="stat-icon">🚪</div>
+                <div class="stat-value">{{ checkouts_today|length }}</div>
+                <div class="stat-label">Check-outs Today</div>
+            </div>
+            <div class="stat-card sc3">
+                <div class="stat-icon">🛏️</div>
+                <div class="stat-value">{{ occupied_ct }}</div>
+                <div class="stat-label">Occupied Rooms</div>
+            </div>
+            <div class="stat-card sc4">
+                <div class="stat-icon">🟢</div>
+                <div class="stat-value">{{ available_ct }}</div>
+                <div class="stat-label">Available Rooms</div>
+            </div>
+        </div>
+
+        <!-- ROOM STATUS VISUAL GRID -->
+        <div class="room-grid-section">
+            <div class="section-title"><i class="fas fa-th-large"></i> Room Status Grid — All {{ total_rooms }} Rooms
+                <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--text-muted);">Click a room to update status</span>
+            </div>
+
+            {% for room_type, label, emoji in [('single','Single Rooms (S100–S124) · Floors 1–3','🛏️'),('double','Double Rooms (D125–D149) · Floors 2–4','🛏️'),('family','Family Suites (F150–F174) · Floors 4–5','👨‍👩‍👧‍👦'),('couple','Couple Rooms (C175–C189) · Floors 5–6','💑'),('vip','VIP Suites (V190–V199) · Floors 6–7','👑')] %}
+            <div class="floor-section">
+                <div class="floor-label">{{ emoji }} {{ label }}</div>
+                <div class="rooms-row">
+                    {% for room in rooms if room.get('room_type') == room_type %}
+                    {% set avail = room.get('availability','available') %}
+                    {% set rnum = room.get('room_number', room.get('name','')[:4]) %}
+                    <a href="{{ url_for('update_availability', room_id=room.get('room_id','')) }}"
+                       class="room-cell {% if avail in ['occupied','unavailable'] %}room-occupied{% elif avail == 'cleaning' %}room-cleaning{% elif avail == 'maintenance' %}room-maintenance{% elif room_type == 'vip' %}room-vip-avail{% else %}room-available{% endif %}"
+                       title="{{ rnum }} — {{ avail }}" style="text-decoration:none;">
+                        <span class="rnum">{{ rnum }}</span>
+                        <span class="rtype">{{ '●' if avail in ['occupied','unavailable'] else ('🧹' if avail=='cleaning' else ('🔧' if avail=='maintenance' else '○')) }}</span>
+                        <div class="room-tooltip">{{ rnum }} · {{ avail|title }}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="room-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.5);"></div> Available</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.5);"></div> Occupied</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.5);"></div> Cleaning</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(139,92,246,0.5);"></div> Maintenance</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(212,175,55,0.5);"></div> VIP Available</div>
+            </div>
+        </div>
+
+        <!-- CHECK-INS & CHECK-OUTS -->
+        <div class="grid-2">
+            <!-- TODAY'S CHECK-INS -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-arrow-right-to-bracket"></i> Today's Check-ins
+                    <span style="background:#22c55e;color:#0d1117;border-radius:10px;padding:1px 7px;font-size:0.68rem;margin-left:4px;font-weight:700;">{{ checkins_today|length }}</span>
+                </div>
+                {% if bookings %}
+                <table class="lux-table">
+                    <thead><tr><th>Guest</th><th>Room</th><th>Guests</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for booking in bookings[:6] %}
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;font-size:0.84rem;">{{ booking.get('user_name','Guest') }}</div>
+                                <div style="font-size:0.7rem;color:var(--text-muted);">{{ booking.get('booking_id','—')[:8] if booking.get('booking_id') else '—' }}</div>
+                            </td>
+                            <td><strong>{{ booking.get('room_number', booking.get('room_id','—')) }}</strong></td>
+                            <td>{{ booking.get('guests',1) }}</td>
+                            <td>
+                                <span class="badge-lux {{ 'badge-success' if booking.get('status')=='confirmed' else ('badge-warning' if booking.get('status')=='pending' else 'badge-info') }}">
+                                    {{ booking.get('status','pending')|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn-sm-act btn-checkin" onclick="handleCheckin(this,'{{ booking.get('booking_id','') }}')"><i class="fas fa-check"></i> Check In</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align:center;padding:30px;color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-calendar-check" style="font-size:1.8rem;display:block;margin-bottom:8px;opacity:0.3;"></i>No check-ins scheduled for today</div>
+                {% endif %}
+            </div>
+
+            <!-- TODAY'S CHECK-OUTS -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-arrow-right-from-bracket"></i> Today's Check-outs
+                    <span style="background:#f59e0b;color:#0d1117;border-radius:10px;padding:1px 7px;font-size:0.68rem;margin-left:4px;font-weight:700;">{{ checkouts_today|length }}</span>
+                </div>
+                {% if bookings %}
+                <table class="lux-table">
+                    <thead><tr><th>Guest</th><th>Room</th><th>Pending</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for booking in bookings[:6] if booking.get('status') in ['confirmed','checked_in'] %}
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;font-size:0.84rem;">{{ booking.get('user_name','Guest') }}</div>
+                                <div style="font-size:0.7rem;color:var(--text-muted);">Out: {{ booking.get('check_out','—')[:10] if booking.get('check_out') else '—' }}</div>
+                            </td>
+                            <td><strong>{{ booking.get('room_number', booking.get('room_id','—')) }}</strong></td>
+                            <td style="color:#fbbf24;font-weight:600;">₹0</td>
+                            <td><span class="badge-lux badge-info">ACTIVE</span></td>
+                            <td>
+                                <button class="btn-sm-act btn-checkout" onclick="handleCheckout(this)"><i class="fas fa-sign-out-alt"></i> Check Out</button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">No active check-outs today</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align:center;padding:30px;color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-door-open" style="font-size:1.8rem;display:block;margin-bottom:8px;opacity:0.3;"></i>No checkouts today</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CURRENT GUESTS & HOUSEKEEPING -->
+        <div class="grid-2">
+            <!-- CURRENT GUESTS -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-users"></i> Current Guests In Hotel</div>
+                {% if bookings %}
+                <table class="lux-table">
+                    <thead><tr><th>Guest</th><th>Room</th><th>Check-out</th><th>Special Request</th></tr></thead>
+                    <tbody>
+                        {% for booking in bookings[:6] if booking.get('status') in ['confirmed','checked_in'] %}
+                        <tr>
+                            <td style="font-weight:600;">{{ booking.get('user_name','Guest') }}</td>
+                            <td>{{ booking.get('room_number', booking.get('room_id','—')) }}</td>
+                            <td style="font-size:0.8rem;color:var(--text-muted);">{{ booking.get('check_out','—')[:10] if booking.get('check_out') else '—' }}</td>
+                            <td style="font-size:0.78rem;color:#fbbf24;">
+                                {% if booking.get('special_requests') %}
+                                <i class="fas fa-info-circle me-1"></i>{{ booking.get('special_requests','')[:30] }}
+                                {% else %}—{% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px;">No current guests</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align:center;padding:30px;color:var(--text-muted);font-size:0.85rem;">No active guests</div>
+                {% endif %}
+            </div>
+
+            <!-- HOUSEKEEPING -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-broom"></i> Housekeeping Tasks</div>
+                {% set hk_tasks = [
+                  {'room':'S115','task':'Deep Clean','assigned':'Priya','priority':'High','status':'In Progress'},
+                  {'room':'D132','task':'Room Clean','assigned':'Lakshmi','priority':'Medium','status':'Pending'},
+                  {'room':'V192','task':'Turndown','assigned':'Meena','priority':'High','status':'Pending'},
+                  {'room':'F165','task':'Inspection','assigned':'Ravi','priority':'Low','status':'Scheduled'},
+                  {'room':'C178','task':'Extra Towels','assigned':'Priya','priority':'Medium','status':'Completed'},
+                ] %}
+                {% for task in hk_tasks %}
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--card-bg2);border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">
+                    <div>
+                        <div style="font-size:0.83rem;font-weight:600;">{{ task.room }} — {{ task.task }}</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;"><i class="fas fa-user me-1"></i>{{ task.assigned }}
+                            &nbsp;<span class="badge-lux {{ 'badge-danger' if task.priority=='High' else ('badge-warning' if task.priority=='Medium' else 'badge-info') }}">{{ task.priority }}</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="badge-lux {{ 'badge-success' if task.status=='Completed' else ('badge-info' if task.status=='In Progress' else 'badge-warning') }}">{{ task.status }}</span>
+                        <div style="margin-top:5px;">
+                            <button class="btn-sm-act btn-checkin" onclick="this.closest('div').querySelector('.badge-lux:last-of-type').textContent='Completed';this.textContent='✓'"><i class="fas fa-check"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <button class="btn-sm-act btn-info" style="margin-top:6px;width:100%;justify-content:center;"><i class="fas fa-plus me-1"></i>Create New Task</button>
+            </div>
+        </div>
+
+        <!-- SERVICE REQUESTS & MAINTENANCE -->
+        <div class="grid-2">
+            <!-- SERVICE REQUESTS -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-concierge-bell"></i> Service Requests
+                    <span style="background:#f59e0b;color:#0d1117;border-radius:10px;padding:1px 7px;font-size:0.68rem;margin-left:4px;font-weight:700;">{{ pending_requests|length }}</span>
+                </div>
+                {% if pending_requests %}
+                {% for req in pending_requests[:5] %}
+                <div class="req-item">
+                    <div class="req-title">{{ req.get('message', req.get('request_type','Service Request'))[:60] }}</div>
+                    <div class="req-meta">
+                        <i class="fas fa-user me-1"></i>{{ req.get('user_name','Guest') }}
+                        &nbsp;·&nbsp; <i class="fas fa-clock me-1"></i>{{ req.get('created_at','Just now')[:16] if req.get('created_at') else 'Just now' }}
+                    </div>
+                    <div class="req-actions">
+                        <button class="btn-resolve" onclick="this.closest('.req-item').style.opacity='0.5';this.textContent='✓ Resolved'"><i class="fas fa-check me-1"></i>Resolve</button>
+                        <button class="btn-escalate"><i class="fas fa-arrow-up me-1"></i>Escalate</button>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div style="text-align:center;padding:30px;color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-check-circle" style="font-size:1.8rem;display:block;margin-bottom:8px;color:#22c55e;opacity:0.5;"></i>No pending requests! 🎉</div>
+                {% endif %}
+            </div>
+
+            <!-- MAINTENANCE ALERTS -->
+            <div class="section-card2">
+                <div class="section-title"><i class="fas fa-tools"></i> Maintenance Alerts
+                    <span style="background:#ef4444;color:white;border-radius:10px;padding:1px 7px;font-size:0.68rem;margin-left:4px;font-weight:700;">2</span>
+                </div>
+                {% set maint_issues = [
+                  {'room':'V195','issue':'AC not cooling properly','priority':'High','assigned':'Raman','eta':'2 hours'},
+                  {'room':'D140','issue':'Leaking tap in bathroom','priority':'Medium','assigned':'Kumar','eta':'4 hours'},
+                ] %}
+                {% for issue in maint_issues %}
+                <div class="maint-item">
+                    <div class="maint-icon"><i class="fas fa-wrench"></i></div>
+                    <div>
+                        <div class="maint-title">Room {{ issue.room }} — {{ issue.issue }}</div>
+                        <div class="maint-meta">
+                            <span class="badge-lux {{ 'badge-danger' if issue.priority=='High' else 'badge-warning' }}">{{ issue.priority }}</span>
+                            &nbsp; Assigned: {{ issue.assigned }} &nbsp;·&nbsp; ETA: {{ issue.eta }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <button class="btn-sm-act btn-danger-sm" style="margin-top:8px;width:100%;justify-content:center;" onclick="alert('Maintenance request submitted!')"><i class="fas fa-plus me-1"></i>Report New Issue</button>
+            </div>
+        </div>
+
+        <!-- STAFF NOTES / INTERNAL MESSAGES -->
+        <div class="section-card2" style="margin-bottom:18px;">
+            <div class="section-title"><i class="fas fa-comment-dots"></i> Internal Messages
+                <span style="font-size:0.76rem;font-weight:400;color:var(--text-muted);margin-left:auto;">Staff & Management Only</span>
+            </div>
+            <div class="grid-2" style="margin-bottom:12px;">
+                <div>
+                    {% set messages = [
+                      {'from':'Manager (9:00 AM)','text':'VIP guest arriving at 3 PM in V190. Please ensure room is perfect and fruits basket ready.','color':'#fbbf24'},
+                      {'from':'Housekeeping (10:30 AM)','text':'Low stock: Towels need reorder urgently. Only 45 units remaining.','color':'#f87171'},
+                      {'from':'Front Desk (11:00 AM)','text':'Room D130 checkout delayed — guest has late checkout approved until 2 PM.','color':'#4ade80'},
+                    ] %}
+                    {% for msg in messages %}
+                    <div class="msg-item">
+                        <div class="msg-from" style="color:{{ msg.color }};"><i class="fas fa-user-circle me-1"></i>{{ msg.from }}</div>
+                        <div class="msg-text" style="font-size:0.82rem;">{{ msg.text }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Post a message to your team:</div>
+                    <textarea rows="4" placeholder="Type your message here..." style="width:100%;background:var(--card-bg2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:0.83rem;resize:vertical;"></textarea>
+                    <button class="btn-sm-act btn-checkin" style="margin-top:8px;" onclick="alert('Message posted!')"><i class="fas fa-paper-plane me-1"></i>Post Message</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-card2" style="margin-bottom:18px;">
+            <div class="section-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+            <div class="qa-grid">
+                {% for icon, label, link in [
+                  ('fa-user-plus','Walk-in Booking',url_for('rooms')),
+                  ('fa-phone','Phone Booking',url_for('rooms')),
+                  ('fa-broom','Request Cleaning','#'),
+                  ('fa-tools','Report Maintenance','#'),
+                  ('fa-bell','Guest Request','#'),
+                  ('fa-exclamation-triangle','Emergency Alert','#')
+                ] %}
+                <a href="{{ link }}" class="qa-item" onclick="{{ 'alert(\'Emergency alert sent to all staff!\')' if label == 'Emergency Alert' else '' }}">
+                    <span class="qa-icon"><i class="fas {{ icon }}"></i></span>
+                    <span class="qa-label">{{ label }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Live clock
+        function updateClock() {
+            const el = document.getElementById('live-clock');
+            if (!el) return;
+            const now = new Date();
+            el.textContent = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function handleCheckin(btn, bookingId) {
+            btn.textContent = '✓ Checked In';
+            btn.disabled = true;
+            btn.classList.remove('btn-checkin');
+            btn.style.background = 'rgba(34,197,94,0.05)';
+            btn.style.color = '#4ade8088';
+        }
+        function handleCheckout(btn) {
+            if (confirm('Confirm checkout? Please verify payment and collect key card.')) {
+                btn.textContent = '✓ Checked Out';
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+            }
+        }
+    </script>
+</body>
+</html>
